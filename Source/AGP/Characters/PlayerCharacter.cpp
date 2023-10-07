@@ -79,6 +79,7 @@ void APlayerCharacter::FireWeapon(const FInputActionValue& Value)
 	}
 }
 
+//When R is pressed and the weapon isn't being reloaded, call the reload method
 void APlayerCharacter::Reload(const FInputActionValue& Value)
 {
 	if(WeaponComponent != nullptr)

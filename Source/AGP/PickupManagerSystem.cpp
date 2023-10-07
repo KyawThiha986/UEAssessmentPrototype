@@ -24,7 +24,7 @@ void UPickupManagerSystem::SpawnPickups()
 		UE_LOG(LogTemp, Error, TEXT("Unable to spawn pickups."))
 		return;
 	}
-	//Otherwise, Spawn a pickup at a position designated by random range
+	//Otherwise, Spawn pickups at a position designated by random range
 	if (const UAGPGameInstance* GameInstance =
 	GetWorld()->GetGameInstance<UAGPGameInstance>())
 	{

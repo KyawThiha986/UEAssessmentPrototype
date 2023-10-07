@@ -67,40 +67,53 @@ void AGripPickup::RollBonuses()
 	int32 BonusPick;
 	int32 BonusRoll = 1;
 
+	//booleans to ensure the same bonus rolls are never picked twice
+	bool AccuracyUp = false;
+	bool FireRateUp = false;
+	bool DamageUp = false;
+	bool MagSizeUp = false;
+	bool ReloadTimeUp = false;
+
+	//Until the bonus roll exceeds the maximum roll, randomly pick one of the five additional bonus stats to apply for the pickup
 	while (BonusRoll <= MaxBonusRoll)
 	{
 		while (true)
 		{
 			BonusPick = FMath::RandRange(1, 5);
-			if (BonusPick == 1)
+			if (BonusPick == 1 && AccuracyUp == false)
 			{
 				GripPickupStats.Accuracy += FMath::RandRange(0.008f, 0.016f);
 				BonusRoll += 1;
+				AccuracyUp = true;
 				break;
 			}
-			if (BonusPick == 2)
+			if (BonusPick == 2 && FireRateUp == false)
 			{
 				GripPickupStats.FireRate += FMath::RandRange(0.05f, 0.1f);
 				BonusRoll += 1;
+				FireRateUp = true;
 				break;
 				
 			}
-			if (BonusPick == 3)
+			if (BonusPick == 3 && DamageUp == false)
 			{
 				GripPickupStats.BaseDamage += FMath::RandRange(4.0f, 8.0f);
 				BonusRoll += 1;
+				DamageUp = true;
 				break;
 			}
-			if (BonusPick == 4)
+			if (BonusPick == 4 && MagSizeUp == false)
 			{
 				GripPickupStats.MagazineSize += FMath::RandRange(3, 6);
 				BonusRoll += 1;
+				MagSizeUp = true;
 				break;
 			}
-			if (BonusPick == 5)
+			if (BonusPick == 5 && ReloadTimeUp == false)
 			{
 				GripPickupStats.ReloadTime += FMath::RandRange(0.4f, 0.8f);
 				BonusRoll += 1;
+				ReloadTimeUp = true;
 				break;
 			}
 		}		

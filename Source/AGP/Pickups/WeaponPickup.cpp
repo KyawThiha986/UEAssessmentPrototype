@@ -54,10 +54,9 @@ void AWeaponPickup::GenerateWeaponPickup()
 		WeaponPickupStats.Accuracy = FMath::RandRange(0.875f, 0.925f);
 		WeaponPickupStats.FireRate = FMath::RandRange(0.4f, 0.5f);
 		WeaponPickupStats.BaseDamage = FMath::RandRange(5.0f, 10.0f);
-		WeaponPickupStats.MagazineSize = FMath::RandRange(10, 19);
+		WeaponPickupStats.MagazineSize = FMath::RandRange(6, 12);
 		WeaponPickupStats.ReloadTime = FMath::RandRange(3.0f, 4.0f);
 	}
-
 	//Determine the stats depending on whether it is good or bad
 }
 
@@ -74,7 +73,7 @@ void AWeaponPickup::RollStats()
 	WeaponPickupStats.Accuracy = FMath::RandRange(0.875f, 0.925f);
 	WeaponPickupStats.FireRate = FMath::RandRange(0.4f, 0.5f);
 	WeaponPickupStats.BaseDamage = FMath::RandRange(5.0f, 10.0f);
-	WeaponPickupStats.MagazineSize = FMath::RandRange(10, 19);
+	WeaponPickupStats.MagazineSize = FMath::RandRange(6, 12);
 	WeaponPickupStats.ReloadTime = FMath::RandRange(4.0f, 5.0f);
 
 	while (CurrentRoll <= MaxRoll)

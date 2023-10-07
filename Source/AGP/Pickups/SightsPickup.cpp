@@ -32,7 +32,7 @@ void ASightsPickup::GenerateSightsPickup()
 	if(Odds <= 5.0f)
 	{
 		SightsRarity = ESightsRarity::Legendary;
-		SightsPickupStats.Accuracy = FMath::RandRange(0.022f, 0.3f);
+		SightsPickupStats.Accuracy = FMath::RandRange(0.022f, 0.03f);
 		MaxBonusRoll = 2;
 		RollBonuses();
 	}
@@ -67,39 +67,52 @@ void ASightsPickup::RollBonuses()
 	int32 BonusPick;
 	int32 BonusRoll = 1;
 
+	//booleans to ensure the same bonus rolls are never picked twice
+	bool AccuracyUp = false;
+	bool FireRateUp = false;
+	bool DamageUp = false;
+	bool MagSizeUp = false;
+	bool ReloadTimeUp = false;
+
+	//Until the bonus roll exceeds the maximum roll, randomly pick one of the five additional bonus stats to apply for the pickup
 	while (BonusRoll <= MaxBonusRoll)
 	{
 		while (true)
 		{
 			BonusPick = FMath::RandRange(1, 5);
-			if (BonusPick == 1)
+			if (BonusPick == 1 && AccuracyUp == false)
 			{
 				SightsPickupStats.Accuracy += FMath::RandRange(0.008f, 0.016f);
+				AccuracyUp = true;
 				BonusRoll += 1;
 				break;
 			}
-			if (BonusPick == 2)
+			if (BonusPick == 2 && FireRateUp == false)
 			{
 				SightsPickupStats.FireRate += FMath::RandRange(0.05f, 0.1f);
+				FireRateUp = true;
 				BonusRoll += 1;
 				break;
 				
 			}
-			if (BonusPick == 3)
+			if (BonusPick == 3 && DamageUp == false)
 			{
 				SightsPickupStats.BaseDamage += FMath::RandRange(4.0f, 8.0f);
+				DamageUp = true;
 				BonusRoll += 1;
 				break;
 			}
-			if (BonusPick == 4)
+			if (BonusPick == 4 && MagSizeUp == false)
 			{
 				SightsPickupStats.MagazineSize += FMath::RandRange(3, 6);
+				MagSizeUp = true;
 				BonusRoll += 1;
 				break;
 			}
-			if (BonusPick == 5)
+			if (BonusPick == 5 && ReloadTimeUp == false)
 			{
 				SightsPickupStats.ReloadTime += FMath::RandRange(0.4f, 0.8f);
+				ReloadTimeUp = true;
 				BonusRoll += 1;
 				break;
 			}

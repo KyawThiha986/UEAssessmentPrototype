@@ -66,20 +66,22 @@ void ABaseCharacter::EquipWeapon(bool bEquipWeapon, const FWeaponStats NewWeapon
 	// At this point we should have a WeaponComponent if we are trying to equip a weapon.
 	if (HasWeapon())
 	{
-		// Set the weapons stats to the given weapon stats.
+		// Set the weapons stats to the given weapon stats, and then set the current ammo to its magazine size
 		WeaponComponent->SetWeaponStats(NewWeaponStats);
 		WeaponComponent -> SetFinalStats();
 		WeaponComponent -> Ammo = WeaponComponent -> FinalWeaponStats.MagazineSize;
+		// To ensure some stats don't exceed the limit
 		CheckStatCap();
 		if(WeaponComponent)
 		{
-			OutputStatLog();
+			OutputAllLogs();
 		}
 	}
 	
 	EquipWeaponGraphical(bEquipWeapon);
 }
 
+// Equip the barrel attachment if the player has a weapon equipped
 void ABaseCharacter::EquipBarrel(const FBarrelStats NewBarrelStats)
 {
 	// If weapon component exists, change the barrel's stats to the new one. Then, calculate the gun's new final stats
@@ -87,8 +89,9 @@ void ABaseCharacter::EquipBarrel(const FBarrelStats NewBarrelStats)
 	{
 		WeaponComponent -> SetBarrelStats(NewBarrelStats);
 		WeaponComponent -> SetFinalStats();
+		// To ensure some final stats don't exceed the limit
 		CheckStatCap();
-		OutputStatLog();
+		OutputAllLogs();
 	}
 }
 
@@ -99,8 +102,9 @@ void ABaseCharacter::EquipSights(const FSightsStats NewSightsStats)
 	{
 		WeaponComponent -> SetSightsStats(NewSightsStats);
 		WeaponComponent -> SetFinalStats();
+		// To ensure some final stats don't exceed the limit
 		CheckStatCap();
-		OutputStatLog();
+		OutputAllLogs();
 	}
 }
 
@@ -111,8 +115,9 @@ void ABaseCharacter::EquipMagazine(const FMagazineStats NewMagazineStats)
 	{
 		WeaponComponent -> SetMagazineStats(NewMagazineStats);
 		WeaponComponent -> SetFinalStats();
+		// To ensure some final stats don't exceed the limit
 		CheckStatCap();
-		OutputStatLog();
+		OutputAllLogs();
 	}
 }
 
@@ -123,8 +128,9 @@ void ABaseCharacter::EquipGrip(const FGripStats NewGripStats)
 	{
 		WeaponComponent -> SetGripStats(NewGripStats);
 		WeaponComponent -> SetFinalStats();
+		// To ensure some final stats don't exceed the limit
 		CheckStatCap();
-		OutputStatLog();
+		OutputAllLogs();
 	}
 }
 
@@ -135,8 +141,9 @@ void ABaseCharacter::EquipStock(const FStockStats NewStockStats)
 	{ 
 		WeaponComponent -> SetStockStats(NewStockStats);
 		WeaponComponent -> SetFinalStats();
+		// To ensure some final stats don't exceed the limit
 		CheckStatCap();
-		OutputStatLog();
+		OutputAllLogs();
 	}
 }
 
