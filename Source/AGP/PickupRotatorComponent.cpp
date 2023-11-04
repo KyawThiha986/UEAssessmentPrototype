@@ -21,6 +21,7 @@ void UPickupRotatorComponent::BeginPlay()
 
 	FVector ActorLocation = GetOwner()->GetActorLocation();
 	//UE_LOG(LogTemp, Warning, TEXT("Current Location: %s"), *ActorLocation.ToString());
+	
 }
 
 void UPickupRotatorComponent::TickRotateObject(const float& DeltaTime)

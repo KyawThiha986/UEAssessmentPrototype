@@ -3,12 +3,18 @@
 
 #include "GripPickup.h"
 
+#include "PickupManagerSubsystem.h"
 #include "../Characters/PlayerCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 void AGripPickup::BeginPlay()
 {
 	Super::BeginPlay();
-	GenerateGripPickup();
+
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		GenerateGripPickup();
+	}
 	UpdateGripPickupMaterial();
 }
 
@@ -16,107 +22,104 @@ void AGripPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AAct
                                     UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& HitInfo)
 {
 	//Super::OnPickupOverlap(OverlappedComponent, OtherActor, OtherComponent, OtherBodyIndex, bFromSweep, HitInfo);
-	// UE_LOG(LogTemp, Display, TEXT("Overlap event occurred on WeaponPickup"))
-
+	// UE_LOG(LogTemp, Display, TEXT("Overlap event occurred on WeaponPiGrip
 	if (ABaseCharacter* Player = Cast<ABaseCharacter>(OtherActor))
 	{
-		Player->EquipGrip(GripPickupStats);
-		Destroy();
+		Player->EquipGrip(GripStats);
+		// We only want to delete it in the authority version.
+		if (GetLocalRole() == ROLE_Authority)
+		{
+			// Get the PickupManager subsystem.
+			if (UPickupManagerSubsystem* PickupManager = GetWorld()->GetSubsystem<UPickupManagerSubsystem>())
+			{
+				PickupManager->PickupConsumed(this);
+			}
+		}
 	}
+}
+
+void AGripPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AGripPickup, GripRarity);
+	DOREPLIFETIME(AGripPickup, GripStats);
 }
 
 void AGripPickup::GenerateGripPickup()
-{
-	float Odds = FMath::RandRange(0, 100);
-
-	if(Odds <= 5.0f)
+{GripRarity = GripRarityPicker();
+	TArray<bool> GoodStats;
+	switch (GripRarity)
 	{
-		GripRarity = EGripRarity::Legendary;
-		GripPickupStats.FireRate += FMath::RandRange(0.21f, 0.24f);
-		MaxBonusRoll = 2;
-		RollBonuses();
+	case EGripRarity::Legendary:
+		GripStats.FireRate = FMath::RandRange(0.11f, 0.15f);
+		GoodStats = GripStatPicker(2, 5);
+		break;
+	case EGripRarity::Master:
+		GripStats.FireRate = FMath::RandRange(0.1f, 0.14f);
+		GoodStats = GripStatPicker(1, 5);
+		break;
+	case EGripRarity::Rare:
+		GripStats.FireRate = FMath::RandRange(0.05f, 0.09f);
+		GoodStats = GripStatPicker(1, 5);
+		break;
+	default:
+		GripStats.FireRate = FMath::RandRange(0.04f, 0.08f);
+		GoodStats = GripStatPicker(0, 5);
+		break;
 	}
 
-	else if(Odds > 5.0f && Odds <= 20.0f)
-	{
-		GripRarity = EGripRarity::Master;
-		GripPickupStats.FireRate += FMath::RandRange(0.16f, 0.21f);
-		MaxBonusRoll = 1;
-		RollBonuses();
-	}
-
-	else if(Odds > 20.0f && Odds <= 50.0f)
-	{
-		GripRarity = EGripRarity::Rare;
-		GripPickupStats.FireRate += FMath::RandRange(0.08f, 0.13f);
-		MaxBonusRoll = 1;
-		RollBonuses();
-	}
-
-	else
-	{
-		GripRarity = EGripRarity::Common;
-		GripPickupStats.FireRate += FMath::RandRange(0.05f, 0.1f);
-	}
-
-	//Determine the stats depending on whether it is good or bad
+	GripStats.Accuracy += GoodStats[0] ? FMath::RandRange(0.004f, 0.008f) : 0.0f;
+	GripStats.FireRate += GoodStats[1] ? FMath::RandRange(0.04f, 0.08f) : 0.0f;
+	GripStats.BaseDamage += GoodStats[2] ? FMath::RandRange(3.0f, 6.0f) : 0.0f;
+	GripStats.MagazineSize += GoodStats[3] ? FMath::RandRange(3, 6) : 0;
+	GripStats.ReloadTime += GoodStats[4] ? FMath::RandRange(0.3f, 0.5f) : 0.0f;
 }
 
-void AGripPickup::RollBonuses()
+EGripRarity AGripPickup::GripRarityPicker()
 {
-	int32 BonusPick;
-	int32 BonusRoll = 1;
-
-	//booleans to ensure the same bonus rolls are never picked twice
-	bool AccuracyUp = false;
-	bool FireRateUp = false;
-	bool DamageUp = false;
-	bool MagSizeUp = false;
-	bool ReloadTimeUp = false;
-
-	//Until the bonus roll exceeds the maximum roll, randomly pick one of the five additional bonus stats to apply for the pickup
-	while (BonusRoll <= MaxBonusRoll)
+	// Rules:
+	// 50% chance of Common
+	// 30% chance of Rare
+	// 15% chance of Master
+	// 5% chance of Legendary
+	const float RandPercent = FMath::RandRange(0.0f, 1.0f);
+	
+	if (RandPercent <= 0.5f)
 	{
-		while (true)
-		{
-			BonusPick = FMath::RandRange(1, 5);
-			if (BonusPick == 1 && AccuracyUp == false)
-			{
-				GripPickupStats.Accuracy += FMath::RandRange(0.008f, 0.016f);
-				BonusRoll += 1;
-				AccuracyUp = true;
-				break;
-			}
-			if (BonusPick == 2 && FireRateUp == false)
-			{
-				GripPickupStats.FireRate += FMath::RandRange(0.05f, 0.1f);
-				BonusRoll += 1;
-				FireRateUp = true;
-				break;
-				
-			}
-			if (BonusPick == 3 && DamageUp == false)
-			{
-				GripPickupStats.BaseDamage += FMath::RandRange(4.0f, 8.0f);
-				BonusRoll += 1;
-				DamageUp = true;
-				break;
-			}
-			if (BonusPick == 4 && MagSizeUp == false)
-			{
-				GripPickupStats.MagazineSize += FMath::RandRange(3, 6);
-				BonusRoll += 1;
-				MagSizeUp = true;
-				break;
-			}
-			if (BonusPick == 5 && ReloadTimeUp == false)
-			{
-				GripPickupStats.ReloadTime += FMath::RandRange(0.4f, 0.8f);
-				BonusRoll += 1;
-				ReloadTimeUp = true;
-				break;
-			}
-		}		
+		return EGripRarity::Common;
 	}
+	if (RandPercent <= 0.8f)
+	{
+		return EGripRarity::Rare;
+	}
+	if (RandPercent <= 0.95f)
+	{
+		return EGripRarity::Master;
+	}
+	
+	return EGripRarity::Legendary;
 }
 
+TArray<bool> AGripPickup::GripStatPicker(int32 NumOfGood, int32 NumOfStats)
+{
+	// Fill the array with the correct number of good and bad stats.
+	TArray<bool> GoodStats;
+	for (int32 i = 0; i < NumOfStats; i++)
+	{
+		// Ternary condition: Will add true if I < NumOfGood otherwise add false.
+		GoodStats.Add(i < NumOfGood ? true : false);
+	}
+
+	// Array shuffling algorithm.
+	for (int32 i = 0; i < GoodStats.Num(); i++)
+	{
+		// Get a random index from the GoodStats array.
+		const int32 RandIndex = FMath::RandRange(0, GoodStats.Num() - 1);
+		// Then swap the item at that random index with the item in the i index.
+		const bool Temp = GoodStats[i];
+		GoodStats[i] = GoodStats[RandIndex];
+		GoodStats[RandIndex] = Temp;
+	}
+
+	return GoodStats;
+}

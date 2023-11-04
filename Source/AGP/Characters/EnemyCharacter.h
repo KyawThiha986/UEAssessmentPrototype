@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "BaseCharacter.h"
 #include "PlayerCharacter.h"
 #include "EnemyCharacter.generated.h"
@@ -90,7 +89,7 @@ protected:
 	 * see any PlayerCharacter.
 	 */
 	UPROPERTY()
-	APlayerCharacter* SensedCharacter = nullptr;
+	TWeakObjectPtr<APlayerCharacter> SensedCharacter;
 
 	/**
 	 * An array of vectors representing the current path that the agent is traversing along.
@@ -115,14 +114,15 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	bool OuttaAmmo = false;
 
 private:
 	
 	/**
-	 * NOT USED ANYMORE - Was used for TickEvade and TickEngage before we setup the UPawnSensingComponent.
+	 * @deprecated Was used for TickEvade and TickEngage before we setup the UPawnSensingComponent.
 	 * @return A pointer to one APlayerCharacter actor in the world.
 	 */
 	APlayerCharacter* FindPlayer() const;
+
+	void FaceTowards(const FVector& TargetLocation);
 
 };

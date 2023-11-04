@@ -8,8 +8,21 @@
 
 void UPathfindingSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Creating the UPathfindingSubsystem."))
 	PopulateNodes();
-	GetWaypointPositions();
+}
+
+TArray<FVector> UPathfindingSubsystem::GetWaypointPositions() const
+{
+	TArray<FVector> NodePositions;
+	for (ANavigationNode* Node : Nodes)
+	{
+		if (Node)
+		{
+			NodePositions.Add(Node->GetActorLocation());
+		}
+	}
+	return NodePositions;
 }
 
 TArray<FVector> UPathfindingSubsystem::GetRandomPath(const FVector& StartLocation)
@@ -27,14 +40,63 @@ TArray<FVector> UPathfindingSubsystem::GetPathAway(const FVector& StartLocation,
 	return GetPath(FindNearestNode(StartLocation), FindFurthestNode(TargetLocation));
 }
 
-TArray<FVector> UPathfindingSubsystem::GetWaypointPositions()
+void UPathfindingSubsystem::PlaceProceduralNodes(const TArray<FVector>& LandscapeVertexData, int32 MapWidth, int32 MapHeight)
 {
-	TArray<FVector> NodeLocations;
-	for (ANavigationNode* Node : Nodes)
+	// Need to destroy all of the current nodes in the world.
+	RemoveAllNodes();
+	
+	// Then create and place all the nodes and store them in the ProcedurallyPlacedNodes array.
+	for (int Y = 0; Y < MapHeight; Y++)
 	{
-		NodeLocations.Add(Node->GetActorLocation());
+		for (int X = 0; X < MapWidth; X++)
+		{
+			// Spawn the node in
+			if (ANavigationNode* Node = GetWorld()->SpawnActor<ANavigationNode>())
+			{
+				Node->SetActorLocation(LandscapeVertexData[Y * MapWidth + X]);
+				ProcedurallyPlacedNodes.Add(Node);
+			} else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Unable to spawn a node for some reason. This is bad!"))
+			}
+			
+		}
 	}
-	return NodeLocations;
+	// Then add connections between all adjacent nodes.
+	for (int Y = 0; Y < MapHeight; Y++)
+	{
+		for (int X = 0; X < MapWidth; X++)
+		{
+			if (ANavigationNode* CurrentNode = ProcedurallyPlacedNodes[Y * MapWidth + X]) // Make sure it's a valid ptr.
+			{
+				// ADD CONNECTIONS:
+				// Add Left
+				if (X != MapWidth-1)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[Y * MapWidth + X+1]);
+				// Add Up
+				if (Y != MapHeight-1)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[(Y+1) * MapWidth + X]);
+				// Add Right
+				if (X != 0)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[Y * MapWidth + X-1]);
+				// Add Down
+				if (Y != 0)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[(Y-1) * MapWidth + X]);
+				// Add UpLeft
+				if (X != MapWidth-1 && Y != MapHeight-1)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[(Y+1) * MapWidth + X+1]);
+				// Add UpRight
+				if (X != 0 && Y != MapHeight-1)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[(Y+1) * MapWidth + X-1]);
+				// Add DownRight
+				if (X != 0 && Y != 0)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[(Y-1) * MapWidth+ X-1]);
+				// Add DownLeft
+				if (X != MapWidth-1 && Y != 0)
+					CurrentNode->ConnectedNodes.Add(ProcedurallyPlacedNodes[(Y-1) * MapWidth + X+1]);
+			}
+		}
+	}
 }
 
 void UPathfindingSubsystem::PopulateNodes()
@@ -44,7 +106,18 @@ void UPathfindingSubsystem::PopulateNodes()
 	for (TActorIterator<ANavigationNode> It(GetWorld()); It; ++It)
 	{
 		Nodes.Add(*It);
-		UE_LOG(LogTemp, Warning, TEXT("NODE: %s"), *(*It)->GetActorLocation().ToString())
+		//UE_LOG(LogTemp, Warning, TEXT("NODE: %s"), *(*It)->GetActorLocation().ToString())
+	}
+}
+
+void UPathfindingSubsystem::RemoveAllNodes()
+{
+	Nodes.Empty();
+	ProcedurallyPlacedNodes.Empty();
+
+	for (TActorIterator<ANavigationNode> It(GetWorld()); It; ++It)
+	{
+		GetWorld()->DestroyActor(*It);
 	}
 }
 
@@ -124,6 +197,9 @@ TArray<FVector> UPathfindingSubsystem::GetPath(ANavigationNode* StartNode, ANavi
 	TArray<ANavigationNode*> OpenSet;
 	OpenSet.Add(StartNode);
 
+	// StartNode->GScore = UE_MAX_FLT;
+	// StartNode->HScore = FVector::Distance(StartNode->GetActorLocation(), EndNode->GetActorLocation());
+
 	// Setup the maps that will hold the GScores, HScores and CameFrom
 	TMap<ANavigationNode*, float> GScores, HScores;
 	TMap<ANavigationNode*, ANavigationNode*> CameFrom;
@@ -155,7 +231,7 @@ TArray<FVector> UPathfindingSubsystem::GetPath(ANavigationNode* StartNode, ANavi
 		if (CurrentNode == EndNode)
 		{
 			// Then we have found the path so reconstruct it and get the positions of each of the nodes in the path.
-			UE_LOG(LogTemp, Display, TEXT("PATH FOUND"))
+			// UE_LOG(LogTemp, Display, TEXT("PATH FOUND"))
 			return ReconstructPath(CameFrom, EndNode);
 		}
 

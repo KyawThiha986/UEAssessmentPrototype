@@ -3,12 +3,18 @@
 
 #include "StockPickup.h"
 
+#include "PickupManagerSubsystem.h"
 #include "../Characters/PlayerCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 void AStockPickup::BeginPlay()
 {
 	Super::BeginPlay();
-	GenerateStockPickup();
+
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		GenerateStockPickup();
+	}
 	UpdateStockPickupMaterial();
 }
 
@@ -20,103 +26,101 @@ void AStockPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 
 	if (ABaseCharacter* Player = Cast<ABaseCharacter>(OtherActor))
 	{
-		Player->EquipStock(StockPickupStats);
-		Destroy();
+		Player->EquipStock(StockStats);
+		// We only want to delete it in the authority version.
+		if (GetLocalRole() == ROLE_Authority)
+		{
+			// Get the PickupManager subsystem.
+			if (UPickupManagerSubsystem* PickupManager = GetWorld()->GetSubsystem<UPickupManagerSubsystem>())
+			{
+				PickupManager->PickupConsumed(this);
+			}
+		}
 	}
+}
+
+void AStockPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AStockPickup, StockRarity);
+	DOREPLIFETIME(AStockPickup, StockStats);
 }
 
 void AStockPickup::GenerateStockPickup()
-{
-	float Odds = FMath::RandRange(0, 100);
-
-	if(Odds <= 5.0f)
+{StockRarity = StockRarityPicker();
+	TArray<bool> GoodStats;
+	switch (StockRarity)
 	{
-		StockRarity = EStockRarity::Legendary;
-		StockPickupStats.ReloadTime += FMath::RandRange(1.55f, 1.95f);
-		MaxBonusRoll = 2;
-		RollBonuses();
+	case EStockRarity::Legendary:
+		StockStats.ReloadTime = FMath::RandRange(0.15f, 0.4f);
+		GoodStats = StockStatPicker(2, 5);
+		break;
+	case EStockRarity::Master:
+		StockStats.ReloadTime = FMath::RandRange(0.4f, 0.65f);
+		GoodStats = StockStatPicker(1, 5);
+		break;
+	case EStockRarity::Rare:
+		StockStats.ReloadTime = FMath::RandRange(0.2f, 0.45f);
+		GoodStats = StockStatPicker(1, 5);
+		break;
+	default:
+		StockStats.ReloadTime = FMath::RandRange(0.15f, 0.4f);
+		GoodStats = StockStatPicker(0, 5);
+		break;
 	}
 
-	else if(Odds > 5.0f && Odds <= 20.0f)
-	{
-		StockRarity = EStockRarity::Master;
-		StockPickupStats.ReloadTime += FMath::RandRange(1.3f, 1.7f);
-		MaxBonusRoll = 1;
-		RollBonuses();
-	}
-
-	else if(Odds > 20.0f && Odds <= 50.0f)
-	{
-		StockRarity = EStockRarity::Rare;
-		StockPickupStats.ReloadTime += FMath::RandRange(0.65f, 1.05f);
-		MaxBonusRoll = 1;
-		RollBonuses();
-	}
-
-	else
-	{
-		StockRarity = EStockRarity::Common;
-		StockPickupStats.ReloadTime += FMath::RandRange(0.4f, 0.8f);
-	}
-
-	//Determine the stats depending on whether it is good or bad
+	StockStats.Accuracy += GoodStats[0] ? FMath::RandRange(0.004f, 0.008f) : 0.0f;
+	StockStats.FireRate += GoodStats[1] ? FMath::RandRange(0.04f, 0.08f) : 0.0f;
+	StockStats.BaseDamage += GoodStats[2] ? FMath::RandRange(3.0f, 6.0f) : 0.0f;
+	StockStats.MagazineSize += GoodStats[3] ? FMath::RandRange(3, 6) : 0;
+	StockStats.ReloadTime += GoodStats[4] ? FMath::RandRange(0.3f, 0.5f) : 0.0f;
 }
 
-void AStockPickup::RollBonuses()
+EStockRarity AStockPickup::StockRarityPicker()
 {
-	int32 BonusPick;
-	int32 BonusRoll = 1;
-
-	//booleans to ensure the same bonus rolls are never picked twice
-	bool AccuracyUp = false;
-	bool FireRateUp = false;
-	bool DamageUp = false;
-	bool MagSizeUp = false;
-	bool ReloadTimeUp = false;
-
-	//Until the bonus roll exceeds the maximum roll, randomly pick one of the five additional bonus stats to apply for the pickup
-	while (BonusRoll <= MaxBonusRoll)
+	// Rules:
+	// 50% chance of Common
+	// 30% chance of Rare
+	// 15% chance of Master
+	// 5% chance of Legendary
+	const float RandPercent = FMath::RandRange(0.0f, 1.0f);
+	
+	if (RandPercent <= 0.5f)
 	{
-		while (true)
-		{
-			BonusPick = FMath::RandRange(1, 5);
-			if (BonusPick == 1 && AccuracyUp == false)
-			{
-				StockPickupStats.Accuracy += FMath::RandRange(0.008f, 0.016f);
-				AccuracyUp = true;
-				BonusRoll += 1;
-				break;
-			}
-			if (BonusPick == 2 && FireRateUp == false)
-			{
-				StockPickupStats.FireRate += FMath::RandRange(0.05f, 0.1f);
-				FireRateUp = true;
-				BonusRoll += 1;
-				break;
-				
-			}
-			if (BonusPick == 3 && DamageUp == false)
-			{
-				StockPickupStats.BaseDamage += FMath::RandRange(4.0f, 8.0f);
-				DamageUp = true;
-				BonusRoll += 1;
-				break;
-			}
-			if (BonusPick == 4 && MagSizeUp == false)
-			{
-				StockPickupStats.MagazineSize += FMath::RandRange(3, 6);
-				MagSizeUp = true;
-				BonusRoll += 1;
-				break;
-			}
-			if (BonusPick == 5 && ReloadTimeUp == false)
-			{
-				StockPickupStats.ReloadTime += FMath::RandRange(0.4f, 0.8f);
-				ReloadTimeUp = true;
-				BonusRoll += 1;
-				break;
-			}
-		}		
+		return EStockRarity::Common;
 	}
+	if (RandPercent <= 0.8f)
+	{
+		return EStockRarity::Rare;
+	}
+	if (RandPercent <= 0.95f)
+	{
+		return EStockRarity::Master;
+	}
+	
+	return EStockRarity::Legendary;
 }
 
+TArray<bool> AStockPickup::StockStatPicker(int32 NumOfGood, int32 NumOfStats)
+{
+	// Fill the array with the correct number of good and bad stats.
+	TArray<bool> GoodStats;
+	for (int32 i = 0; i < NumOfStats; i++)
+	{
+		// Ternary condition: Will add true if I < NumOfGood otherwise add false.
+		GoodStats.Add(i < NumOfGood ? true : false);
+	}
+
+	// Array shuffling algorithm.
+	for (int32 i = 0; i < GoodStats.Num(); i++)
+	{
+		// Get a random index from the GoodStats array.
+		const int32 RandIndex = FMath::RandRange(0, GoodStats.Num() - 1);
+		// Then swap the item at that random index with the item in the i index.
+		const bool Temp = GoodStats[i];
+		GoodStats[i] = GoodStats[RandIndex];
+		GoodStats[RandIndex] = Temp;
+	}
+
+	return GoodStats;
+}

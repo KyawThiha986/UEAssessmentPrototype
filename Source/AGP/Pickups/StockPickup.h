@@ -1,8 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+
+#include "CoreMinimal.h"
 #include "PickupBase.h"
-#include "WeaponComponent.h"
+#include "AGP/Characters/WeaponComponent.h"
+#include "StockPickup.generated.h"
 
 UENUM(BlueprintType)
 enum class EStockRarity : uint8
@@ -12,10 +15,10 @@ enum class EStockRarity : uint8
 	Master,
 	Legendary
 };
-#include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "StockPickup.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
 class AGP_API AStockPickup : public APickupBase
 {
@@ -23,20 +26,24 @@ class AGP_API AStockPickup : public APickupBase
 
 protected:
 
+	UPROPERTY(BlueprintReadOnly, Replicated)
+	EStockRarity StockRarity = EStockRarity::Common;
+	UPROPERTY(Replicated)
+	FStockStats StockStats;
+
 	virtual void BeginPlay() override;
-	
 	virtual void OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& HitInfo) override;
 
-	UPROPERTY(BlueprintReadWrite)
-	EStockRarity StockRarity = EStockRarity::Common;
-
-	FStockStats StockPickupStats;
-	void GenerateStockPickup();
-	void RollBonuses();
-	
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateStockPickupMaterial();
-	int32 MaxBonusRoll;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
+private:
+
+	void GenerateStockPickup();
+	EStockRarity StockRarityPicker();
+	TArray<bool> StockStatPicker(int32 NumOfGood, int32 NumOfStats);
+	
 };

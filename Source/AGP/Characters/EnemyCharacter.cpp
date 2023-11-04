@@ -5,7 +5,6 @@
 #include "EngineUtils.h"
 #include "HealthComponent.h"
 #include "PlayerCharacter.h"
-#include "../Pickups/WeaponComponent.h"
 #include "AGP/Pathfinding/PathfindingSubsystem.h"
 #include "Perception/PawnSensingComponent.h"
 
@@ -23,6 +22,9 @@ void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// DO NOTHING IF NOT ON THE SERVER
+	if (GetLocalRole() != ROLE_Authority) return;
+	
 	PathfindingSubsystem = GetWorld()->GetSubsystem<UPathfindingSubsystem>();
 	if (PathfindingSubsystem)
 	{
@@ -35,6 +37,8 @@ void AEnemyCharacter::BeginPlay()
 	{
 		PawnSensingComponent->OnSeePawn.AddDynamic(this, &AEnemyCharacter::OnSensedPawn);
 	}
+	
+	
 }
 
 void AEnemyCharacter::MoveAlongPath()
@@ -69,40 +73,35 @@ void AEnemyCharacter::TickPatrol()
 void AEnemyCharacter::TickEngage()
 {
 	
-	if (!SensedCharacter) return;
+	if (!SensedCharacter.IsValid()) return;
+
+	// Look towards the player they are engaging with.
+	FaceTowards(SensedCharacter.Get()->GetActorLocation());
 	
 	if (CurrentPath.IsEmpty())
 	{
-		CurrentPath = PathfindingSubsystem->GetPath(GetActorLocation(), SensedCharacter->GetActorLocation());
+		CurrentPath = PathfindingSubsystem->GetPath(GetActorLocation(), SensedCharacter.Get()->GetActorLocation());
 	}
 	MoveAlongPath();
-
-	if (WeaponComponent)
+	if (HasWeapon())
 	{
-		if (WeaponComponent -> Ammo > 0)
+		if (WeaponComponent->IsMagazineEmpty())
 		{
-			Fire(SensedCharacter->GetActorLocation());
+			Reload();
 		}
-		else if (WeaponComponent -> Ammo <= 0 && OuttaAmmo == false)
-		{
-			OuttaAmmo = true;
-			WeaponComponent -> Reload();
-		}
-		if (WeaponComponent -> CurrentReloadTime > WeaponComponent -> WeaponStats.ReloadTime)
-		{
-			OuttaAmmo = false;
-		}
+		Fire(SensedCharacter.Get()->GetActorLocation());
 	}
+	
 }
 
 void AEnemyCharacter::TickEvade()
 {
 	// Find the player and return if it can't find it.
-	if (!SensedCharacter) return;
+	if (!SensedCharacter.IsValid()) return;
 
 	if (CurrentPath.IsEmpty())
 	{
-		CurrentPath = PathfindingSubsystem->GetPathAway(GetActorLocation(), SensedCharacter->GetActorLocation());
+		CurrentPath = PathfindingSubsystem->GetPathAway(GetActorLocation(), SensedCharacter.Get()->GetActorLocation());
 	}
 	MoveAlongPath();
 }
@@ -112,19 +111,19 @@ void AEnemyCharacter::OnSensedPawn(APawn* SensedActor)
 	if (APlayerCharacter* Player = Cast<APlayerCharacter>(SensedActor))
 	{
 		SensedCharacter = Player;
-		UE_LOG(LogTemp, Display, TEXT("Sensed Player"))
+		//UE_LOG(LogTemp, Display, TEXT("Sensed Player"))
 	}
 }
 
 void AEnemyCharacter::UpdateSight()
 {
-	if (!SensedCharacter) return;
+	if (!SensedCharacter.IsValid()) return;
 	if (PawnSensingComponent)
 	{
-		if (!PawnSensingComponent->HasLineOfSightTo(SensedCharacter))
+		if (!PawnSensingComponent->HasLineOfSightTo(SensedCharacter.Get()))
 		{
 			SensedCharacter = nullptr;
-			UE_LOG(LogTemp, Display, TEXT("Lost Player"))
+			//UE_LOG(LogTemp, Display, TEXT("Lost Player"))
 		}
 	}
 }
@@ -135,13 +134,16 @@ void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// DO NOTHING UNLESS IT IS ON THE SERVER
+	if (GetLocalRole() != ROLE_Authority) return;
+	
 	UpdateSight();
 	
 	switch(CurrentState)
 	{
 	case EEnemyState::Patrol:
 		TickPatrol();
-		if (SensedCharacter)
+		if (SensedCharacter.IsValid())
 		{
 			if (HealthComponent->GetCurrentHealthPercentage() >= 0.4f)
 			{
@@ -159,7 +161,7 @@ void AEnemyCharacter::Tick(float DeltaTime)
 		{
 			CurrentPath.Empty();
 			CurrentState = EEnemyState::Evade;
-		} else if (!SensedCharacter)
+		} else if (!SensedCharacter.IsValid())
 		{
 			CurrentState = EEnemyState::Patrol;
 		}
@@ -170,7 +172,7 @@ void AEnemyCharacter::Tick(float DeltaTime)
 		{
 			CurrentPath.Empty();
 			CurrentState = EEnemyState::Engage;
-		} else if (!SensedCharacter)
+		} else if (!SensedCharacter.IsValid())
 		{
 			CurrentState = EEnemyState::Patrol;
 		}
@@ -198,5 +200,14 @@ APlayerCharacter* AEnemyCharacter::FindPlayer() const
 		UE_LOG(LogTemp, Error, TEXT("Unable to find the Player Character in the world."))
 	}
 	return Player;
+}
+
+void AEnemyCharacter::FaceTowards(const FVector& TargetLocation)
+{
+	// The direction of the target location from the enemy characters current location.
+	FVector Direction = TargetLocation - GetActorLocation();
+	Direction.Z = 0; // We only want it to rotate in the XY plane.
+
+	SetActorRotation(Direction.Rotation());
 }
 

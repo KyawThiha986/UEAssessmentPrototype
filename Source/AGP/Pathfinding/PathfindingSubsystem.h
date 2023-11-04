@@ -18,6 +18,12 @@ class AGP_API UPathfindingSubsystem : public UWorldSubsystem
 public:
 
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+
+	/**
+	 * Will get all of the world positions of the nodes in the navigation system.
+	 * @return The world positions of all of the nodes in the navigation system.
+	 */
+	TArray<FVector> GetWaypointPositions() const;
 	/**
 	 * Will retrieve a path from the StartLocation, to a random position in the world's navigation system.
 	 * @param StartLocation The location that the path will start at.
@@ -39,15 +45,28 @@ public:
 	 */
 	TArray<FVector> GetPathAway(const FVector& StartLocation, const FVector& TargetLocation);
 
-	TArray<FVector> GetWaypointPositions();
-	
-protected:
+	// Procedural Map Logic
+	/**
+	 * Will place down navigation nodes at the vertex positions, excluding the edge vertex positions and
+	 * setup connections between all adjacent nodes. Will also make sure there are no other nodes already
+	 * placed. If there is they will be removed.
+	 * @param LandscapeVertexData The mesh vertex positions of the landscape.
+	 * @param MapWidth The grid width of the landscape.
+	 * @param MapHeight The grid height of the landscape.
+	 */
+	void PlaceProceduralNodes(const TArray<FVector>& LandscapeVertexData, int32 MapWidth, int32 MapHeight);
 
+protected:
+	
 	TArray<ANavigationNode*> Nodes;
+
+	// Procedural Map Logic
+	TArray<ANavigationNode*> ProcedurallyPlacedNodes;
 
 private:
 
 	void PopulateNodes();
+	void RemoveAllNodes();
 	ANavigationNode* GetRandomNode();
 	ANavigationNode* FindNearestNode(const FVector& TargetLocation);
 	ANavigationNode* FindFurthestNode(const FVector& TargetLocation);
