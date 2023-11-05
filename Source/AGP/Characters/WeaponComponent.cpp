@@ -7,6 +7,7 @@
 #include "HealthComponent.h"
 #include "PlayerCharacter.h"
 #include "AGP/AGPGameInstance.h"
+#include "AGP/Pickups/PhysicsBulletPickup.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
@@ -104,7 +105,6 @@ bool UWeaponComponent::FireImplementation(const FVector& BulletStart, const FVec
 			OutHitInfo.HitType = EWeaponHitType::Dirt;
 			//DrawDebugLine(GetWorld(), BulletStart, HitResult.ImpactPoint, FColor::Orange, false, 1.0f);
 		}
-		
 	}
 	else
 	{
@@ -116,11 +116,14 @@ bool UWeaponComponent::FireImplementation(const FVector& BulletStart, const FVec
 	TimeSinceLastShot = 0.0f;
 	RoundsRemainingInMagazine--;
 	UpdateAmmoUI();
+	
 	return true;
 }
 
 void UWeaponComponent::FireVisualImplementation(const FVector& BulletStart, const FWeaponHitInfo& HitInfo)
 {
+	FVector SpawnPosition = HitInfo.HitLocation;
+	SpawnPosition.Z += 10.0f;
 	//DrawDebugLine(GetWorld(), BulletStart, HitLocation, FColor::Blue, false, 1.0f);
 	if (UAGPGameInstance* GameInstance = Cast<UAGPGameInstance>(GetWorld()->GetGameInstance()))
 	{
@@ -149,6 +152,11 @@ void UWeaponComponent::FireVisualImplementation(const FVector& BulletStart, cons
 				// Otherwise we want to play it at a particular 3d location so that we can detect which direction
 				// the gunshot has come from through our speakers or headphones.
 				GameInstance->PlayGunshotSoundAtLocation(BulletStart);
+			}
+			if (GetOwnerRole() == ROLE_Authority)
+			{
+				GetWorld()->SpawnActor<APhysicsBulletPickup>(
+				GameInstance->GetBulletPickupClass(), SpawnPosition, FRotator::ZeroRotator);
 			}
 		}
 		if (ABaseCharacter* OwnerCharacter = Cast<ABaseCharacter>(GetOwner()))

@@ -40,6 +40,11 @@ UClass* UAGPGameInstance::GetStockPickupClass() const
   return StockPickupClass.Get();
  }
 
+UClass* UAGPGameInstance::GetBulletPickupClass() const
+ {
+  return BulletPickupClass.Get();
+ }
+
  void UAGPGameInstance::SpawnGroundHitParticles(const FVector& Location)
 {
  UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GroundHitParticles, Location);

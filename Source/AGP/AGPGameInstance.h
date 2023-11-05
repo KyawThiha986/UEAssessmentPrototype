@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Pickups/PhysicsBulletPickup.h"
 #include "AGPGameInstance.generated.h"
 
 class AStockPickup;
@@ -27,6 +28,7 @@ public:
 	UClass* GetMagazinePickupClass() const;
 	UClass* GetGripPickupClass() const;
 	UClass* GetStockPickupClass() const;
+	UClass* GetBulletPickupClass() const;
 
 	void SpawnGroundHitParticles(const FVector& Location);
 
@@ -48,6 +50,9 @@ protected:
 	TSubclassOf<AGripPickup> GripPickupClass;
 	UPROPERTY(EditDefaultsOnly, Category="Pickup Classes")
 	TSubclassOf<AStockPickup> StockPickupClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Pickup Classes")
+	TSubclassOf<APhysicsBulletPickup> BulletPickupClass;
 
 	/**
 	 * Stores a reference to the particle system for a ground hit. Needs to be set in the BP_AGPGameInstance.
