@@ -155,8 +155,11 @@ void UWeaponComponent::FireVisualImplementation(const FVector& BulletStart, cons
 			}
 			if (GetOwnerRole() == ROLE_Authority)
 			{
-				GetWorld()->SpawnActor<APhysicsBulletPickup>(
-				GameInstance->GetBulletPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				if (GetOwner() == Cast<APlayerCharacter>(GetOwner()))
+				{
+					GetWorld()->SpawnActor<APhysicsBulletPickup>(
+                    				GameInstance->GetBulletPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				}
 			}
 		}
 		if (ABaseCharacter* OwnerCharacter = Cast<ABaseCharacter>(GetOwner()))
