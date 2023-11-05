@@ -44,6 +44,8 @@ public:
 	UPROPERTY()
 	int32 MagazineSize = 5;
 	float ReloadTime = 1.0f;
+	UPROPERTY()
+	int32 ReserveAmmo = 0;
 
 	/**
 	 * A debug ToString function that allows the easier printing of the weapon stats.
