@@ -44,8 +44,7 @@ public:
 	UPROPERTY()
 	int32 MagazineSize = 5;
 	float ReloadTime = 1.0f;
-	UPROPERTY()
-	int32 ReserveAmmo = 0;
+	
 
 	/**
 	 * A debug ToString function that allows the easier printing of the weapon stats.
@@ -215,6 +214,9 @@ public:
 	int32 MagazineSize = 5;
 	float ReloadTime = 1.0f;
 
+	UPROPERTY()
+	int32 ReserveAmmo = 0;
+
 	/**
 	 * A debug ToString function that allows the easier printing of the weapon stats.
 	 * @return A string detailing the weapon stats stored in this struct.
@@ -252,6 +254,8 @@ public:
 	void SetGripStats(const FGripStats& GripInfo);
 	void SetStockStats(const FStockStats& StockInfo);
 	void SetFinalStats();
+
+	void PickUpBullet();
 	
 	bool IsMagazineEmpty();
 
@@ -279,6 +283,10 @@ protected:
 	
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
 	int32 RoundsRemainingInMagazine;
+	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
+	int32 ReserveAmmoLeft;
+	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
+	int32 ExcessAmmo;
 	float TimeSinceLastShot;
 	bool bIsReloading = false;
 

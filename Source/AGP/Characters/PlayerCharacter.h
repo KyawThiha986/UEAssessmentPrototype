@@ -22,7 +22,7 @@ public:
 	APlayerCharacter();
 
 	void UpdateHealthBar(float HealthPercent);
-	void UpdateAmmoUI(int32 RoundsRemaining, int32 MagazineSize);
+	void UpdateAmmoUI(int32 RoundsRemaining, int32 MagazineSize, int32 ReserveAmmo);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ChooseCharacterMesh();

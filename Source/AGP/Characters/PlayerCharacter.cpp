@@ -24,11 +24,11 @@ void APlayerCharacter::UpdateHealthBar(float HealthPercent)
 	}
 }
 
-void APlayerCharacter::UpdateAmmoUI(int32 RoundsRemaining, int32 MagazineSize)
+void APlayerCharacter::UpdateAmmoUI(int32 RoundsRemaining, int32 MagazineSize, int32 ReserveAmmo)
 {
 	if (PlayerHUD && IsLocallyControlled())
 	{
-		PlayerHUD->SetAmmoText(RoundsRemaining, MagazineSize);
+		PlayerHUD->SetAmmoText(RoundsRemaining, MagazineSize, ReserveAmmo);
 	}
 }
 

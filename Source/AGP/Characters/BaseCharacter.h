@@ -27,6 +27,9 @@ public:
 	void EquipMagazine(const FMagazineStats& MagazineStats = FMagazineStats());
 	void EquipGrip(const FGripStats& GripStats = FGripStats());
 	void EquipStock(const FStockStats& StockStats = FStockStats());
+
+	void PickBullet();
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void EquipWeaponGraphical(bool bEquipWeapon);
 

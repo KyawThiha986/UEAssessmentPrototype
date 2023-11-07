@@ -14,10 +14,20 @@ void UPlayerCharacterHUD::SetHealthBar(float HealthPercent)
 	}
 }
 
-void UPlayerCharacterHUD::SetAmmoText(int32 RoundsRemaining, int32 MagazineSize)
+void UPlayerCharacterHUD::SetAmmoText(int32 RoundsRemaining, int32 MagazineSize, int32 ReserveRounds)
 {
 	if (AmmoText)
 	{
-		AmmoText->SetText(FText::FromString(FString::FromInt(RoundsRemaining) + " / " + FString::FromInt(MagazineSize)));
+		AmmoText->SetText(FText::FromString(FString::FromInt(RoundsRemaining)));
+	}
+
+	if (MagazineText)
+	{
+		MagazineText->SetText(FText::FromString(FString::FromInt(MagazineSize)));
+	}
+
+	if (ReserveAmmoText)
+	{
+		ReserveAmmoText->SetText(FText::FromString("x " + FString::FromInt(ReserveRounds)));
 	}
 }

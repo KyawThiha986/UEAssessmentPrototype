@@ -20,7 +20,7 @@ void APhysicsBulletPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedCompon
 
 	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
 	{
-		//Player->PickBullet();
+		Player->PickBullet();
 		// We only want to delete it in the authority version.
 		if (GetLocalRole() == ROLE_Authority)
 		{

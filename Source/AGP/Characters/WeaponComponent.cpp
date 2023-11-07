@@ -4,6 +4,7 @@
 #include "WeaponComponent.h"
 
 #include "BaseCharacter.h"
+#include "EnemyCharacter.h"
 #include "HealthComponent.h"
 #include "PlayerCharacter.h"
 #include "AGP/AGPGameInstance.h"
@@ -53,7 +54,47 @@ void UWeaponComponent::ServerReload_Implementation()
 void UWeaponComponent::CompleteReload()
 {
 	UE_LOG(LogTemp, Display, TEXT("Reload Complete"))
-	RoundsRemainingInMagazine = FinalStats.MagazineSize;
+	if (GetOwner() == Cast<APlayerCharacter>(GetOwner()))
+	{
+		if (FinalStats.ReserveAmmo > 0)
+		{
+			if (FinalStats.ReserveAmmo >= FinalStats.MagazineSize)
+			{
+				FinalStats.ReserveAmmo -= FinalStats.MagazineSize - RoundsRemainingInMagazine;
+				RoundsRemainingInMagazine = FinalStats.MagazineSize;
+				ReserveAmmoLeft = FinalStats.ReserveAmmo;
+			}
+			else if (FinalStats.ReserveAmmo < FinalStats.MagazineSize)
+			{
+				/*
+				if (RoundsRemainingInMagazine > FinalStats.MagazineSize)
+				{
+					ExcessAmmo = RoundsRemainingInMagazine - FinalStats.MagazineSize;
+					RoundsRemainingInMagazine = FinalStats.MagazineSize;
+				}
+				else
+				{
+					ExcessAmmo = 0;
+				}
+				*/
+				
+				RoundsRemainingInMagazine += FinalStats.ReserveAmmo;
+				FinalStats.ReserveAmmo = RoundsRemainingInMagazine - FinalStats.MagazineSize;
+				if (FinalStats.ReserveAmmo < 0)
+				{
+					FinalStats.ReserveAmmo = 0;
+				}
+				RoundsRemainingInMagazine -= FinalStats.ReserveAmmo;
+				//FinalStats.ReserveAmmo -= FinalStats.MagazineSize - RoundsRemainingInMagazine;
+				
+				ReserveAmmoLeft = FinalStats.ReserveAmmo;
+			}
+		}
+	}
+	else if (GetOwner() == Cast<AEnemyCharacter>(GetOwner()))
+	{
+		RoundsRemainingInMagazine = FinalStats.MagazineSize;
+	}
 	UpdateAmmoUI();
 }
 
@@ -88,7 +129,8 @@ bool UWeaponComponent::FireImplementation(const FVector& BulletStart, const FVec
 	FHitResult HitResult;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(GetOwner());
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, BulletStart, AccuracyAdjustedFireAt, ECC_WorldStatic, QueryParams))
+	QueryParams.AddIgnoredActor(ECC_WorldDynamic);
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, BulletStart, AccuracyAdjustedFireAt, ECC_WorldDynamic, QueryParams))
 	{
 		OutHitInfo.HitLocation = HitResult.ImpactPoint;
 		if (ABaseCharacter* HitCharacter = Cast<ABaseCharacter>(HitResult.GetActor()))
@@ -244,6 +286,13 @@ void UWeaponComponent::SetFinalStats()
 	UpdateAmmoUI();
 }
 
+void UWeaponComponent::PickUpBullet()
+{
+	FinalStats.ReserveAmmo += 1;
+	ReserveAmmoLeft = FinalStats.ReserveAmmo;
+	UpdateAmmoUI();
+}
+
 bool UWeaponComponent::IsMagazineEmpty()
 {
 	return RoundsRemainingInMagazine <= 0;
@@ -253,6 +302,7 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(UWeaponComponent, RoundsRemainingInMagazine)
+	DOREPLIFETIME(UWeaponComponent, ReserveAmmoLeft)
 	DOREPLIFETIME(UWeaponComponent, WeaponStats);
 	DOREPLIFETIME(UWeaponComponent, BarrelStats);
 	DOREPLIFETIME(UWeaponComponent, SightStats);
@@ -275,7 +325,7 @@ void UWeaponComponent::UpdateAmmoUI()
 {
 	if (APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetOwner()))
 	{
-		PlayerCharacter->UpdateAmmoUI(RoundsRemainingInMagazine, FinalStats.MagazineSize);
+		PlayerCharacter->UpdateAmmoUI(RoundsRemainingInMagazine, FinalStats.MagazineSize, ReserveAmmoLeft);
 	}
 }
 

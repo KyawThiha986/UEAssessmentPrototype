@@ -24,7 +24,6 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ABaseCharacter::Fire(const FVector& FireAtLocation)
@@ -164,6 +163,17 @@ void ABaseCharacter::EquipStock(const FStockStats& StockStats)
 			WeaponComponent->SetStockStats(StockStats);
 			WeaponComponent->SetFinalStats();
 			UE_LOG(LogTemp, Display, TEXT("Player has equipped stock."))
+		}
+	}
+}
+
+void ABaseCharacter::PickBullet()
+{
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		if (HasWeapon())
+		{
+			WeaponComponent->PickUpBullet();
 		}
 	}
 }
