@@ -51,15 +51,15 @@ void ASightPickup::GenerateSightPickup()
 	TArray<bool> GoodStats;
 	switch (SightRarity)
 	{
-	case ESightRarity::Legendary:
+	case ERarity::Legendary:
 		SightStats.Accuracy = FMath::RandRange(0.011f, 0.015f);
 		GoodStats = SightStatPicker(2, 5);
 		break;
-	case ESightRarity::Master:
+	case ERarity::Master:
 		SightStats.Accuracy = FMath::RandRange(0.01f, 0.014f);
 		GoodStats = SightStatPicker(1, 5);
 		break;
-	case ESightRarity::Rare:
+	case ERarity::Rare:
 		SightStats.Accuracy = FMath::RandRange(0.005f, 0.009f);
 		GoodStats = SightStatPicker(1, 5);
 		break;
@@ -76,7 +76,7 @@ void ASightPickup::GenerateSightPickup()
 	SightStats.ReloadTime += GoodStats[4] ? FMath::RandRange(0.3f, 0.5f) : 0.0f;
 }
 
-ESightRarity ASightPickup::SightRarityPicker()
+ERarity ASightPickup::SightRarityPicker()
 {
 	// Rules:
 	// 50% chance of Common
@@ -87,18 +87,18 @@ ESightRarity ASightPickup::SightRarityPicker()
 	
 	if (RandPercent <= 0.5f)
 	{
-		return ESightRarity::Common;
+		return ERarity::Common;
 	}
 	if (RandPercent <= 0.8f)
 	{
-		return ESightRarity::Rare;
+		return ERarity::Rare;
 	}
 	if (RandPercent <= 0.95f)
 	{
-		return ESightRarity::Master;
+		return ERarity::Master;
 	}
 	
-	return ESightRarity::Legendary;
+	return ERarity::Legendary;
 }
 
 TArray<bool> ASightPickup::SightStatPicker(int32 NumOfGood, int32 NumOfStats)

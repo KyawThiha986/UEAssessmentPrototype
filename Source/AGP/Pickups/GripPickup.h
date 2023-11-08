@@ -7,15 +7,6 @@
 #include "AGP/Characters/WeaponComponent.h"
 #include "GripPickup.generated.h"
 
-UENUM(BlueprintType)
-enum class EGripRarity : uint8
-{
-	Common,
-	Rare,
-	Master,
-	Legendary
-};
-
 /**
  * 
  */
@@ -27,7 +18,7 @@ class AGP_API AGripPickup : public APickupBase
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
-	EGripRarity GripRarity = EGripRarity::Common;
+	ERarity GripRarity = ERarity::Common;
 	UPROPERTY(Replicated)
 	FGripStats GripStats;
 
@@ -43,7 +34,7 @@ protected:
 private:
 
 	void GenerateGripPickup();
-	EGripRarity GripRarityPicker();
+	ERarity GripRarityPicker();
 	TArray<bool> GripStatPicker(int32 NumOfGood, int32 NumOfStats);
 	
 };

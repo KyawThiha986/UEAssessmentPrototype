@@ -7,15 +7,6 @@
 #include "AGP/Characters/WeaponComponent.h"
 #include "MagazinePickup.generated.h"
 
-UENUM(BlueprintType)
-enum class EMagazineRarity : uint8
-{
-	Common,
-	Rare,
-	Master,
-	Legendary
-};
-
 /**
  * 
  */
@@ -27,7 +18,7 @@ class AGP_API AMagazinePickup : public APickupBase
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
-	EMagazineRarity MagazineRarity = EMagazineRarity::Common;
+	ERarity MagazineRarity = ERarity::Common;
 	UPROPERTY(Replicated)
 	FMagazineStats MagazineStats;
 
@@ -43,7 +34,7 @@ protected:
 private:
 
 	void GenerateMagazinePickup();
-	EMagazineRarity MagazineRarityPicker();
+	ERarity MagazineRarityPicker();
 	TArray<bool> MagazineStatPicker(int32 NumOfGood, int32 NumOfStats);
 	
 };

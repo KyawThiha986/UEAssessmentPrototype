@@ -38,6 +38,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void FireWeaponGraphical();
+	
+	void ExplodeGraphical(FVector ExplodeLocation);
 
 	/**
 	 * Will reload the weapon if the character has a weapon equipped.
@@ -47,7 +49,8 @@ public:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void OnDeath();
-
+	void Explode(FVector ExplodeLocation);
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -91,5 +94,8 @@ private:
 	void EquipWeaponImplementation(bool bEquipWeapon, const FWeaponStats& WeaponStats = FWeaponStats());
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastEquipWeapon(bool bEquipWeapon, const FWeaponStats& WeaponStats = FWeaponStats());
+	
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastExplode(FVector ExplodeLocation);
 
 };

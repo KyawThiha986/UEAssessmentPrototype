@@ -51,15 +51,15 @@ void ABarrelPickup::GenerateBarrelPickup()
 	TArray<bool> GoodStats;
 	switch (BarrelRarity)
 	{
-	case EBarrelRarity::Legendary:
+	case ERarity::Legendary:
 		BarrelStats.BaseDamage = FMath::RandRange(9.0f, 12.0f);
 		GoodStats = BarrelStatPicker(2, 5);
 		break;
-	case EBarrelRarity::Master:
+	case ERarity::Master:
 		BarrelStats.BaseDamage = FMath::RandRange(8.0f, 11.0f);
 		GoodStats = BarrelStatPicker(1, 5);
 		break;
-	case EBarrelRarity::Rare:
+	case ERarity::Rare:
 		BarrelStats.BaseDamage = FMath::RandRange(4.0f, 7.0f);
 		GoodStats = BarrelStatPicker(1, 5);
 		break;
@@ -76,7 +76,7 @@ void ABarrelPickup::GenerateBarrelPickup()
 	BarrelStats.ReloadTime += GoodStats[4] ? FMath::RandRange(0.3f, 0.5f) : 0.0f;
 }
 
-EBarrelRarity ABarrelPickup::BarrelRarityPicker()
+ERarity ABarrelPickup::BarrelRarityPicker()
 {
 	// Rules:
 	// 50% chance of Common
@@ -87,18 +87,18 @@ EBarrelRarity ABarrelPickup::BarrelRarityPicker()
 	
 	if (RandPercent <= 0.5f)
 	{
-		return EBarrelRarity::Common;
+		return ERarity::Common;
 	}
 	if (RandPercent <= 0.8f)
 	{
-		return EBarrelRarity::Rare;
+		return ERarity::Rare;
 	}
 	if (RandPercent <= 0.95f)
 	{
-		return EBarrelRarity::Master;
+		return ERarity::Master;
 	}
 	
-	return EBarrelRarity::Legendary;
+	return ERarity::Legendary;
 }
 
 TArray<bool> ABarrelPickup::BarrelStatPicker(int32 NumOfGood, int32 NumOfStats)

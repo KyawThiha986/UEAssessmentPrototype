@@ -51,15 +51,15 @@ void AMagazinePickup::GenerateMagazinePickup()
 	TArray<bool> GoodStats;
 	switch (MagazineRarity)
 	{
-	case EMagazineRarity::Legendary:
+	case ERarity::Legendary:
 		MagazineStats.MagazineSize = FMath::RandRange(9, 12);
 		GoodStats = MagazineStatPicker(2, 5);
 		break;
-	case EMagazineRarity::Master:
+	case ERarity::Master:
 		MagazineStats.MagazineSize = FMath::RandRange(8, 11);
 		GoodStats = MagazineStatPicker(1, 5);
 		break;
-	case EMagazineRarity::Rare:
+	case ERarity::Rare:
 		MagazineStats.MagazineSize = FMath::RandRange(4, 7);
 		GoodStats = MagazineStatPicker(1, 5);
 		break;
@@ -76,7 +76,7 @@ void AMagazinePickup::GenerateMagazinePickup()
 	MagazineStats.ReloadTime += GoodStats[4] ? FMath::RandRange(0.3f, 0.5f) : 0.0f;
 }
 
-EMagazineRarity AMagazinePickup::MagazineRarityPicker()
+ERarity AMagazinePickup::MagazineRarityPicker()
 {
 	// Rules:
 	// 50% chance of Common
@@ -87,18 +87,18 @@ EMagazineRarity AMagazinePickup::MagazineRarityPicker()
 	
 	if (RandPercent <= 0.5f)
 	{
-		return EMagazineRarity::Common;
+		return ERarity::Common;
 	}
 	if (RandPercent <= 0.8f)
 	{
-		return EMagazineRarity::Rare;
+		return ERarity::Rare;
 	}
 	if (RandPercent <= 0.95f)
 	{
-		return EMagazineRarity::Master;
+		return ERarity::Master;
 	}
 	
-	return EMagazineRarity::Legendary;
+	return ERarity::Legendary;
 }
 
 TArray<bool> AMagazinePickup::MagazineStatPicker(int32 NumOfGood, int32 NumOfStats)

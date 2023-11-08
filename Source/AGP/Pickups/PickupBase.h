@@ -7,6 +7,15 @@
 #include "GameFramework/Actor.h"
 #include "PickupBase.generated.h"
 
+UENUM(BlueprintType)
+enum class ERarity : uint8
+{
+	Common,
+	Rare,
+	Master,
+	Legendary
+};
+
 class UBoxComponent;
 
 UCLASS()

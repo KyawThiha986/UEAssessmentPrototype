@@ -18,6 +18,7 @@ class AGP_API AMultiplayerGameMode : public AGameMode
 
 public:
 
+	FVector DeathLocation;
 	void RespawnPlayer(AController* Controller);
 	void RespawnEnemy(AEnemyCharacter* EnemyCharacter);
 

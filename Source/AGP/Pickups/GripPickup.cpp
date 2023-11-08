@@ -50,15 +50,15 @@ void AGripPickup::GenerateGripPickup()
 	TArray<bool> GoodStats;
 	switch (GripRarity)
 	{
-	case EGripRarity::Legendary:
+	case ERarity::Legendary:
 		GripStats.FireRate = FMath::RandRange(0.11f, 0.15f);
 		GoodStats = GripStatPicker(2, 5);
 		break;
-	case EGripRarity::Master:
+	case ERarity::Master:
 		GripStats.FireRate = FMath::RandRange(0.1f, 0.14f);
 		GoodStats = GripStatPicker(1, 5);
 		break;
-	case EGripRarity::Rare:
+	case ERarity::Rare:
 		GripStats.FireRate = FMath::RandRange(0.05f, 0.09f);
 		GoodStats = GripStatPicker(1, 5);
 		break;
@@ -75,7 +75,7 @@ void AGripPickup::GenerateGripPickup()
 	GripStats.ReloadTime += GoodStats[4] ? FMath::RandRange(0.3f, 0.5f) : 0.0f;
 }
 
-EGripRarity AGripPickup::GripRarityPicker()
+ERarity AGripPickup::GripRarityPicker()
 {
 	// Rules:
 	// 50% chance of Common
@@ -86,18 +86,18 @@ EGripRarity AGripPickup::GripRarityPicker()
 	
 	if (RandPercent <= 0.5f)
 	{
-		return EGripRarity::Common;
+		return ERarity::Common;
 	}
 	if (RandPercent <= 0.8f)
 	{
-		return EGripRarity::Rare;
+		return ERarity::Rare;
 	}
 	if (RandPercent <= 0.95f)
 	{
-		return EGripRarity::Master;
+		return ERarity::Master;
 	}
 	
-	return EGripRarity::Legendary;
+	return ERarity::Legendary;
 }
 
 TArray<bool> AGripPickup::GripStatPicker(int32 NumOfGood, int32 NumOfStats)

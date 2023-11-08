@@ -3,6 +3,7 @@
 
 #include "MultiplayerGameMode.h"
 
+#include "AGPGameInstance.h"
 #include "EngineUtils.h"
 #include "Characters/PlayerCharacter.h"
 #include "GameFramework/PlayerStart.h"
@@ -13,6 +14,7 @@ void AMultiplayerGameMode::RespawnPlayer(AController* Controller)
 	{
 		if (APlayerCharacter* CurrentlyPossessedCharacter = Cast<APlayerCharacter>(Controller->GetPawn()))
 		{
+			DeathLocation = CurrentlyPossessedCharacter->GetActorLocation();
 			Controller->UnPossess();
 			CurrentlyPossessedCharacter->Destroy();
 			RestartPlayer(Controller);
@@ -23,11 +25,11 @@ void AMultiplayerGameMode::RespawnPlayer(AController* Controller)
 			}
 		}
 	}
-	
 }
 
 void AMultiplayerGameMode::RespawnEnemy(AEnemyCharacter* EnemyCharacter)
 {
+	DeathLocation = EnemyCharacter->GetActorLocation();
 	EnemyCharacter->Destroy();
 	// Create a new enemy character at a random start position.
 	// Because the EnemyCharacters aren't really set up with a Controller, we can't easily get a player start

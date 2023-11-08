@@ -4,17 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "PickupBase.h"
+#include "PickupManagerSubsystem.h"
 #include "AGP/Characters/WeaponComponent.h"
 #include "BarrelPickup.generated.h"
-
-UENUM(BlueprintType)
-enum class EBarrelRarity : uint8
-{
-	Common,
-	Rare,
-	Master,
-	Legendary
-};
 
 /**
  * 
@@ -27,7 +19,7 @@ class AGP_API ABarrelPickup : public APickupBase
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
-	EBarrelRarity BarrelRarity = EBarrelRarity::Common;
+	ERarity BarrelRarity = ERarity::Common;
 	UPROPERTY(Replicated)
 	FBarrelStats BarrelStats;
 
@@ -43,7 +35,7 @@ protected:
 private:
 
 	void GenerateBarrelPickup();
-	EBarrelRarity BarrelRarityPicker();
+	ERarity BarrelRarityPicker();
 	TArray<bool> BarrelStatPicker(int32 NumOfGood, int32 NumOfStats);
 	
 };

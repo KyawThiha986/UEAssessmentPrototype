@@ -7,15 +7,6 @@
 #include "AGP/Characters/WeaponComponent.h"
 #include "SightPickup.generated.h"
 
-UENUM(BlueprintType)
-enum class ESightRarity : uint8
-{
-	Common,
-	Rare,
-	Master,
-	Legendary
-};
-
 /**
  * 
  */
@@ -27,7 +18,7 @@ class AGP_API ASightPickup : public APickupBase
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
-	ESightRarity SightRarity = ESightRarity::Common;
+	ERarity SightRarity = ERarity::Common;
 	UPROPERTY(Replicated)
 	FSightStats SightStats;
 
@@ -43,7 +34,7 @@ protected:
 private:
 
 	void GenerateSightPickup();
-	ESightRarity SightRarityPicker();
+	ERarity SightRarityPicker();
 	TArray<bool> SightStatPicker(int32 NumOfGood, int32 NumOfStats);
 	
 };

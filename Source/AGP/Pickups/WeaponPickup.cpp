@@ -52,13 +52,13 @@ void AWeaponPickup::GenerateWeaponPickup()
 	TArray<bool> GoodStats;
 	switch (WeaponRarity)
 	{
-	case EWeaponRarity::Legendary:
+	case ERarity::Legendary:
 		GoodStats = WeaponStatPicker(4, 5);
 		break;
-	case EWeaponRarity::Master:
+	case ERarity::Master:
 		GoodStats = WeaponStatPicker(3, 5);
 		break;
-	case EWeaponRarity::Rare:
+	case ERarity::Rare:
 		GoodStats = WeaponStatPicker(2, 5);
 		break;
 	default:
@@ -73,7 +73,7 @@ void AWeaponPickup::GenerateWeaponPickup()
 	WeaponStats.ReloadTime = GoodStats[4] ? FMath::RandRange(1.5f, 3.0f) : FMath::RandRange(2.5f, 4.0f);
 }
 
-EWeaponRarity AWeaponPickup::WeaponRarityPicker()
+ERarity AWeaponPickup::WeaponRarityPicker()
 {
 	// Rules:
 	// 50% chance of Common
@@ -84,18 +84,18 @@ EWeaponRarity AWeaponPickup::WeaponRarityPicker()
 	
 	if (RandPercent <= 0.5f)
 	{
-		return EWeaponRarity::Common;
+		return ERarity::Common;
 	}
 	if (RandPercent <= 0.8f)
 	{
-		return EWeaponRarity::Rare;
+		return ERarity::Rare;
 	}
 	if (RandPercent <= 0.95f)
 	{
-		return EWeaponRarity::Master;
+		return ERarity::Master;
 	}
 	
-	return EWeaponRarity::Legendary;
+	return ERarity::Legendary;
 }
 
 TArray<bool> AWeaponPickup::WeaponStatPicker(int32 NumOfGood, int32 NumOfStats)

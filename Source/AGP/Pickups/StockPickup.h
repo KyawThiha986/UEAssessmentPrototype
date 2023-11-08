@@ -7,15 +7,6 @@
 #include "AGP/Characters/WeaponComponent.h"
 #include "StockPickup.generated.h"
 
-UENUM(BlueprintType)
-enum class EStockRarity : uint8
-{
-	Common,
-	Rare,
-	Master,
-	Legendary
-};
-
 /**
  * 
  */
@@ -27,7 +18,7 @@ class AGP_API AStockPickup : public APickupBase
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Replicated)
-	EStockRarity StockRarity = EStockRarity::Common;
+	ERarity StockRarity = ERarity::Common;
 	UPROPERTY(Replicated)
 	FStockStats StockStats;
 
@@ -43,7 +34,7 @@ protected:
 private:
 
 	void GenerateStockPickup();
-	EStockRarity StockRarityPicker();
+	ERarity StockRarityPicker();
 	TArray<bool> StockStatPicker(int32 NumOfGood, int32 NumOfStats);
 	
 };

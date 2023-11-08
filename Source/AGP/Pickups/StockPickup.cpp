@@ -51,15 +51,15 @@ void AStockPickup::GenerateStockPickup()
 	TArray<bool> GoodStats;
 	switch (StockRarity)
 	{
-	case EStockRarity::Legendary:
+	case ERarity::Legendary:
 		StockStats.ReloadTime = FMath::RandRange(0.15f, 0.4f);
 		GoodStats = StockStatPicker(2, 5);
 		break;
-	case EStockRarity::Master:
+	case ERarity::Master:
 		StockStats.ReloadTime = FMath::RandRange(0.4f, 0.65f);
 		GoodStats = StockStatPicker(1, 5);
 		break;
-	case EStockRarity::Rare:
+	case ERarity::Rare:
 		StockStats.ReloadTime = FMath::RandRange(0.2f, 0.45f);
 		GoodStats = StockStatPicker(1, 5);
 		break;
@@ -76,7 +76,7 @@ void AStockPickup::GenerateStockPickup()
 	StockStats.ReloadTime += GoodStats[4] ? FMath::RandRange(0.3f, 0.5f) : 0.0f;
 }
 
-EStockRarity AStockPickup::StockRarityPicker()
+ERarity AStockPickup::StockRarityPicker()
 {
 	// Rules:
 	// 50% chance of Common
@@ -87,18 +87,18 @@ EStockRarity AStockPickup::StockRarityPicker()
 	
 	if (RandPercent <= 0.5f)
 	{
-		return EStockRarity::Common;
+		return ERarity::Common;
 	}
 	if (RandPercent <= 0.8f)
 	{
-		return EStockRarity::Rare;
+		return ERarity::Rare;
 	}
 	if (RandPercent <= 0.95f)
 	{
-		return EStockRarity::Master;
+		return ERarity::Master;
 	}
 	
-	return EStockRarity::Legendary;
+	return ERarity::Legendary;
 }
 
 TArray<bool> AStockPickup::StockStatPicker(int32 NumOfGood, int32 NumOfStats)
