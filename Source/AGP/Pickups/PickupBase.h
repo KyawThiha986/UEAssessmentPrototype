@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Actor.h"
 #include "PickupBase.generated.h"
 
@@ -29,6 +30,8 @@ protected:
 	UStaticMeshComponent* PickupMesh;
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* PickupCollider;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UNiagaraComponent* Sparkle;
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* PickupRoot;
 

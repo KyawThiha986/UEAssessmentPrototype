@@ -2,7 +2,9 @@
 
 
 #include "PickupBase.h"
+#include "NiagaraComponent.h"
 
+#include "AGP/AGPGameInstance.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -15,6 +17,7 @@ APickupBase::APickupBase()
 	// Creates and attaches the Actor Components to this actor.
 	PickupCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Pickup Collider"));
 	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Pickup Mesh"));
+	Sparkle = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Sparkle Particles"));
 	
 	// Specifies that the root transform of this actor should be the transform of the Collider component.
 	SetRootComponent(PickupCollider);
@@ -22,13 +25,13 @@ APickupBase::APickupBase()
 	// Attaches the static mesh component to be a child of the collider. This means that when the actor's root transform
 	// is moved (i.e. the collider transform) then the mesh will move with it.
 	PickupMesh->SetupAttachment(GetRootComponent());
+	Sparkle->SetupAttachment(PickupMesh);
 }
 
 // Called when the game starts or when spawned
 void APickupBase::BeginPlay()
 {
 	Super::BeginPlay();
-
 	if (PickupCollider)
 	{
 		// This attaches our OnPickupOverlap function to be called when the OnComponentBeginOverlap event is triggered.
