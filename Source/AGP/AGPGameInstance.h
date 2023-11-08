@@ -36,6 +36,7 @@ public:
 	void PlayGunshotSound2D();
 	void SpawnCharacterHitParticles(const FVector& Location);
 	void SpawnSparkleParticles(const FVector& Location);
+	void SpawnExplosion(const FVector& Location);
 
 protected:
 
@@ -65,6 +66,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Particle Systems")
 	UNiagaraSystem* SparkleParticles;
+
+	UPROPERTY(EditDefaultsOnly, Category="Particle Systems")
+	UNiagaraSystem* ExplosionParticles;
 
 	UPROPERTY(EditDefaultsOnly, Category="Sound Effects")
 	class USoundCue* GunshotSoundCue;

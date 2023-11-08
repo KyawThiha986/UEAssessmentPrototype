@@ -60,6 +60,11 @@ void UAGPGameInstance::SpawnCharacterHitParticles(const FVector& Location)
   UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SparkleParticles, Location);
  }
 
+ void UAGPGameInstance::SpawnExplosion(const FVector& Location)
+ {
+  UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionParticles, Location);
+ }
+
  void UAGPGameInstance::PlayGunshotSoundAtLocation(const FVector& Location)
  {
   UGameplayStatics::PlaySoundAtLocation(GetWorld(), GunshotSoundCue, Location, FRotator::ZeroRotator);
