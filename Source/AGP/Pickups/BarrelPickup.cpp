@@ -39,13 +39,6 @@ void ABarrelPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	}
 }
 
-void ABarrelPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(ABarrelPickup, BarrelRarity);
-	DOREPLIFETIME(ABarrelPickup, BarrelStats);
-}
-
 void ABarrelPickup::GenerateBarrelPickup()
 {BarrelRarity = BarrelRarityPicker();
 	TArray<bool> GoodStats;

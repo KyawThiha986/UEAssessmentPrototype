@@ -35,14 +35,6 @@ void ABaseCharacter::Fire(const FVector& FireAtLocation)
 	}
 }
 
-void ABaseCharacter::ExplodeGraphical(FVector ExplodeLocation)
-{
-	if (UAGPGameInstance* GameInstance = Cast<UAGPGameInstance>(GetWorld()->GetGameInstance()))
-	{
-		GameInstance->SpawnExplosion(ExplodeLocation);
-	}
-}
-
 void ABaseCharacter::Reload()
 {
 	if (HasWeapon())
@@ -61,8 +53,7 @@ void ABaseCharacter::OnDeath()
 {
 	// WE ONLY WANT TO HANDLE LOGIC IF IT IS ON THE SERVER
 	if (GetLocalRole() != ROLE_Authority) return;
-	FVector DeathLocation = GetOwner()->GetActorLocation();
-	Explode(DeathLocation);
+
 	// IT IS PROBABLY BETTER PRACTICE TO INCLUDE THE PLAYER CHARACTER AND ENEMY CHARACTER DEATH LOGIC IN THEIR
 	// OWN CLASSES INSTEAD OF HANDLING IT ON THE BASE CHARACTER (my bad...)
 	if (AMultiplayerGameMode* GameMode = Cast<AMultiplayerGameMode>(GetWorld()->GetAuthGameMode()))
@@ -80,11 +71,6 @@ void ABaseCharacter::OnDeath()
 			GameMode->RespawnEnemy(EnemyCharacter);
 		}
 	}
-}
-
-void ABaseCharacter::Explode(FVector ExplodeLocation)
-{
-	MulticastExplode(ExplodeLocation);
 }
 
 // Called every frame
@@ -107,7 +93,7 @@ void ABaseCharacter::EquipWeapon(bool bEquipWeapon, const FWeaponStats& WeaponSt
 	}
 }
 
-void ABaseCharacter::EquipBarrel(const FBarrelStats& BarrelStats)
+void ABaseCharacter::EquipBarrel(const FAttachmentStats& BarrelStats)
 {
 	if (GetLocalRole() == ROLE_Authority)
 	{
@@ -123,7 +109,7 @@ void ABaseCharacter::EquipBarrel(const FBarrelStats& BarrelStats)
 	}
 }
 
-void ABaseCharacter::EquipSight(const FSightStats& SightStats)
+void ABaseCharacter::EquipSight(const FAttachmentStats& SightStats)
 {
 	if (GetLocalRole() == ROLE_Authority)
 	{
@@ -138,7 +124,7 @@ void ABaseCharacter::EquipSight(const FSightStats& SightStats)
 	}
 }
 
-void ABaseCharacter::EquipMagazine(const FMagazineStats& MagazineStats)
+void ABaseCharacter::EquipMagazine(const FAttachmentStats& MagazineStats)
 {
 	if (GetLocalRole() == ROLE_Authority)
 	{
@@ -153,7 +139,7 @@ void ABaseCharacter::EquipMagazine(const FMagazineStats& MagazineStats)
 	}
 }
 
-void ABaseCharacter::EquipGrip(const FGripStats& GripStats)
+void ABaseCharacter::EquipGrip(const FAttachmentStats& GripStats)
 {
 	if (GetLocalRole() == ROLE_Authority)
 	{
@@ -168,7 +154,7 @@ void ABaseCharacter::EquipGrip(const FGripStats& GripStats)
 	}
 }
 
-void ABaseCharacter::EquipStock(const FStockStats& StockStats)
+void ABaseCharacter::EquipStock(const FAttachmentStats& StockStats)
 {
 	if (GetLocalRole() == ROLE_Authority)
 	{
@@ -232,11 +218,6 @@ void ABaseCharacter::EquipWeaponImplementation(bool bEquipWeapon, const FWeaponS
 	{
 		UE_LOG(LogTemp, Display, TEXT("Player has unequipped weapon."))
 	}
-}
-
-void ABaseCharacter::MulticastExplode_Implementation(FVector ExplodeLocation)
-{
-	ExplodeGraphical(ExplodeLocation);
 }
 
 void ABaseCharacter::MulticastEquipWeapon_Implementation(bool bEquipWeapon, const FWeaponStats& WeaponStats)

@@ -38,13 +38,6 @@ void AGripPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	}
 }
 
-void AGripPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AGripPickup, GripRarity);
-	DOREPLIFETIME(AGripPickup, GripStats);
-}
-
 void AGripPickup::GenerateGripPickup()
 {GripRarity = GripRarityPicker();
 	TArray<bool> GoodStats;

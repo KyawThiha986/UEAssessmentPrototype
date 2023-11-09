@@ -44,6 +44,15 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void Explode(FVector ExplodeLocation);
 
-		
+	UPROPERTY(Replicated)
+	FVector DeathLocation;
+private:
+	void VisualExplodeImplementation(FVector& ExplodeLocation);
+	
+	UFUNCTION(Server, Reliable)
+	void ServerExplode(const FVector& ExplodeLocation);
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastExplode(FVector ExplodeLocation);
 };

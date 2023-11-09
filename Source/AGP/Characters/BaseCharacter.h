@@ -22,11 +22,11 @@ public:
 	bool HasWeapon();
 
 	void EquipWeapon(bool bEquipWeapon, const FWeaponStats& WeaponStats = FWeaponStats());
-	void EquipBarrel(const FBarrelStats& BarrelStats = FBarrelStats());
-	void EquipSight(const FSightStats& SightStats = FSightStats());
-	void EquipMagazine(const FMagazineStats& MagazineStats = FMagazineStats());
-	void EquipGrip(const FGripStats& GripStats = FGripStats());
-	void EquipStock(const FStockStats& StockStats = FStockStats());
+	void EquipBarrel(const FAttachmentStats& BarrelStats = FAttachmentStats());
+	void EquipSight(const FAttachmentStats& SightStats = FAttachmentStats());
+	void EquipMagazine(const FAttachmentStats& MagazineStats = FAttachmentStats());
+	void EquipGrip(const FAttachmentStats& GripStats = FAttachmentStats());
+	void EquipStock(const FAttachmentStats& StockStats = FAttachmentStats());
 
 	void PickBullet();
 	
@@ -38,8 +38,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void FireWeaponGraphical();
-	
-	void ExplodeGraphical(FVector ExplodeLocation);
 
 	/**
 	 * Will reload the weapon if the character has a weapon equipped.
@@ -49,7 +47,7 @@ public:
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	void OnDeath();
-	void Explode(FVector ExplodeLocation);
+	
 	
 protected:
 	// Called when the game starts or when spawned
@@ -94,8 +92,4 @@ private:
 	void EquipWeaponImplementation(bool bEquipWeapon, const FWeaponStats& WeaponStats = FWeaponStats());
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastEquipWeapon(bool bEquipWeapon, const FWeaponStats& WeaponStats = FWeaponStats());
-	
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastExplode(FVector ExplodeLocation);
-
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseWeaponAttachment.h"
 #include "PickupBase.h"
 #include "AGP/Characters/WeaponComponent.h"
 #include "StockPickup.generated.h"
@@ -11,25 +12,18 @@
  * 
  */
 UCLASS()
-class AGP_API AStockPickup : public APickupBase
+class AGP_API AStockPickup : public ABaseWeaponAttachment
 {
 	GENERATED_BODY()
 
 protected:
-
-	UPROPERTY(BlueprintReadOnly, Replicated)
-	ERarity StockRarity = ERarity::Common;
-	UPROPERTY(Replicated)
-	FStockStats StockStats;
-
+	
 	virtual void BeginPlay() override;
 	virtual void OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 		UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& HitInfo) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateStockPickupMaterial();
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 private:
 

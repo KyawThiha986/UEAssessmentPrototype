@@ -166,7 +166,7 @@ void UWeaponComponent::FireVisualImplementation(const FVector& BulletStart, cons
 {
 	FVector SpawnPosition = HitInfo.HitLocation;
 	SpawnPosition.Z += 10.0f;
-	//DrawDebugLine(GetWorld(), BulletStart, HitLocation, FColor::Blue, false, 1.0f);
+	DrawDebugLine(GetWorld(), BulletStart, HitInfo.HitLocation, FColor::Yellow, false, 0.2f, 0, 3.0f);
 	if (UAGPGameInstance* GameInstance = Cast<UAGPGameInstance>(GetWorld()->GetGameInstance()))
 	{
 		// Determine which particle effect to spawn
@@ -228,31 +228,48 @@ void UWeaponComponent::MulticastFire_Implementation(const FVector& BulletStart, 
 void UWeaponComponent::SetWeaponStats(const FWeaponStats& WeaponInfo)
 {
 	this->WeaponStats = WeaponInfo;
+
+	FinalStats.ReserveAmmo += RoundsRemainingInMagazine;
+	ReserveAmmoLeft = FinalStats.ReserveAmmo;
+
+	ResetAttachments();
+	
+	this->FinalStats.MagazineSize = WeaponStats.MagazineSize + BarrelStats.MagazineSize + SightStats.MagazineSize+ MagazineStats.MagazineSize + GripStats.MagazineSize + StockStats.MagazineSize;
+	
 	// Set the number of bullets to the magazine size
-	RoundsRemainingInMagazine = WeaponInfo.MagazineSize;
+	RoundsRemainingInMagazine = FinalStats.MagazineSize;
 }
 
-void UWeaponComponent::SetBarrelStats(const FBarrelStats& BarrelInfo)
+void UWeaponComponent::ResetAttachments()
+{
+	BarrelStats.Accuracy = 0.0f; SightStats.Accuracy = 0.0f; MagazineStats.Accuracy = 0.0f; GripStats.Accuracy = 0.0f; StockStats.Accuracy = 0.0f;
+	BarrelStats.FireRate = 0.0f; SightStats.FireRate = 0.0f; MagazineStats.FireRate = 0.0f; GripStats.FireRate = 0.0f; StockStats.FireRate = 0.0f;
+	BarrelStats.BaseDamage = 0.0f; SightStats.BaseDamage = 0.0f; MagazineStats.BaseDamage = 0.0f; GripStats.BaseDamage = 0.0f; StockStats.BaseDamage = 0.0f;
+	BarrelStats.MagazineSize = 0; SightStats.MagazineSize = 0; MagazineStats.MagazineSize = 0; GripStats.MagazineSize = 0; StockStats.MagazineSize = 0;
+	BarrelStats.ReloadTime = 0.0f; SightStats.ReloadTime = 0.0f; MagazineStats.ReloadTime = 0.0f; GripStats.ReloadTime = 0.0f; StockStats.ReloadTime = 0.0f;
+}
+
+void UWeaponComponent::SetBarrelStats(const FAttachmentStats& BarrelInfo)
 {
 	this->BarrelStats = BarrelInfo;
 }
 
-void UWeaponComponent::SetSightStats(const FSightStats& SightInfo)
+void UWeaponComponent::SetSightStats(const FAttachmentStats& SightInfo)
 {
 	this->SightStats = SightInfo;
 }
 
-void UWeaponComponent::SetMagazineStats(const FMagazineStats& MagazineInfo)
+void UWeaponComponent::SetMagazineStats(const FAttachmentStats& MagazineInfo)
 {
 	this->MagazineStats = MagazineInfo;
 }
 
-void UWeaponComponent::SetGripStats(const FGripStats& GripInfo)
+void UWeaponComponent::SetGripStats(const FAttachmentStats& GripInfo)
 {
 	this->GripStats = GripInfo;
 }
 
-void UWeaponComponent::SetStockStats(const FStockStats& StockInfo)
+void UWeaponComponent::SetStockStats(const FAttachmentStats& StockInfo)
 {
 	this->StockStats = StockInfo;
 }
@@ -264,10 +281,7 @@ void UWeaponComponent::SetFinalStats()
 	this->FinalStats.BaseDamage = WeaponStats.BaseDamage + BarrelStats.BaseDamage + SightStats.BaseDamage + MagazineStats.BaseDamage + GripStats.BaseDamage + StockStats.BaseDamage;
 	this->FinalStats.MagazineSize = WeaponStats.MagazineSize + BarrelStats.MagazineSize + SightStats.MagazineSize+ MagazineStats.MagazineSize + GripStats.MagazineSize + StockStats.MagazineSize;
 	this->FinalStats.ReloadTime = WeaponStats.ReloadTime - (BarrelStats.ReloadTime + SightStats.ReloadTime + MagazineStats.ReloadTime + GripStats.ReloadTime + StockStats.ReloadTime);
-
-	// Set the number of bullets to the magazine size
-	RoundsRemainingInMagazine = FinalStats.MagazineSize;
-
+	
 	if(FinalStats.Accuracy > 0.999f)
 	{
 		FinalStats.Accuracy = 0.999f;
@@ -281,6 +295,13 @@ void UWeaponComponent::SetFinalStats()
 	if(FinalStats.ReloadTime < 0.2f)
 	{
 		FinalStats.ReloadTime = 0.2f;
+	}
+
+	if(RoundsRemainingInMagazine > FinalStats.MagazineSize)
+	{
+		FinalStats.ReserveAmmo += RoundsRemainingInMagazine - FinalStats.MagazineSize;
+		ReserveAmmoLeft = FinalStats.ReserveAmmo;
+		RoundsRemainingInMagazine = FinalStats.MagazineSize;
 	}
 	
 	UpdateAmmoUI();

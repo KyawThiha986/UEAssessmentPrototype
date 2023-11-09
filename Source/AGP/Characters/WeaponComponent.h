@@ -7,12 +7,6 @@
 #include "WeaponComponent.generated.h"
 
 UENUM(BlueprintType)
-enum class EWeaponType : uint8 {
-	Rifle,
-	Pistol
-};
-
-UENUM(BlueprintType)
 enum class EWeaponHitType : uint8
 {
 	NoHit,
@@ -37,7 +31,6 @@ struct FWeaponStats
 	GENERATED_BODY()
 public:
 	
-	EWeaponType WeaponType = EWeaponType::Rifle;
 	float Accuracy = 1.0f;
 	float FireRate = 0.2f;
 	float BaseDamage = 10.0f;
@@ -63,7 +56,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FBarrelStats
+struct FAttachmentStats
 {
 	GENERATED_BODY()
 public:
@@ -87,118 +80,6 @@ public:
 		BarrelString += "Magazine Size: " + FString::FromInt(MagazineSize) + "\n";
 		BarrelString += "Reload Time:   " + FString::SanitizeFloat(ReloadTime);
 		return BarrelString;
-	}
-};
-
-USTRUCT(BlueprintType)
-struct FSightStats
-{
-	GENERATED_BODY()
-public:
-	float Accuracy = 0.0f;
-	float FireRate = 0.0f;
-	float BaseDamage = 0.0f;
-	UPROPERTY()
-	int32 MagazineSize = 5;
-	float ReloadTime = 0.0f;
-
-	/**
-	 * A debug ToString function that allows the easier printing of the weapon stats.
-	 * @return A string detailing the weapon stats stored in this struct.
-	 */
-	FString ToString() const
-	{
-		FString SightString = "";
-		SightString += "Accuracy:      " + FString::SanitizeFloat(Accuracy) + "\n";
-		SightString += "Fire Rate:     " + FString::SanitizeFloat(FireRate) + "\n";
-		SightString += "Base Damage:   " + FString::SanitizeFloat(BaseDamage) + "\n";
-		SightString += "Magazine Size: " + FString::FromInt(MagazineSize) + "\n";
-		SightString += "Reload Time:   " + FString::SanitizeFloat(ReloadTime);
-		return SightString;
-	}
-};
-
-USTRUCT(BlueprintType)
-struct FMagazineStats
-{
-	GENERATED_BODY()
-public:
-	float Accuracy = 0.0f;
-	float FireRate = 0.0f;
-	float BaseDamage = 0.0f;
-	UPROPERTY()
-	int32 MagazineSize = 0;
-	float ReloadTime = 0.0f;
-
-	/**
-	 * A debug ToString function that allows the easier printing of the weapon stats.
-	 * @return A string detailing the weapon stats stored in this struct.
-	 */
-	FString ToString() const
-	{
-		FString MagazineString = "";
-		MagazineString += "Accuracy:      " + FString::SanitizeFloat(Accuracy) + "\n";
-		MagazineString += "Fire Rate:     " + FString::SanitizeFloat(FireRate) + "\n";
-		MagazineString += "Base Damage:   " + FString::SanitizeFloat(BaseDamage) + "\n";
-		MagazineString += "Magazine Size: " + FString::FromInt(MagazineSize) + "\n";
-		MagazineString += "Reload Time:   " + FString::SanitizeFloat(ReloadTime);
-		return MagazineString;
-	}
-};
-
-USTRUCT(BlueprintType)
-struct FGripStats
-{
-	GENERATED_BODY()
-public:
-	float Accuracy = 0.0f;
-	float FireRate = 0.0f;
-	float BaseDamage = 0.0f;
-	UPROPERTY()
-	int32 MagazineSize = 0;
-	float ReloadTime = 0.0f;
-
-	/**
-	 * A debug ToString function that allows the easier printing of the weapon stats.
-	 * @return A string detailing the weapon stats stored in this struct.
-	 */
-	FString ToString() const
-	{
-		FString GripString = "";
-		GripString += "Accuracy:      " + FString::SanitizeFloat(Accuracy) + "\n";
-		GripString += "Fire Rate:     " + FString::SanitizeFloat(FireRate) + "\n";
-		GripString += "Base Damage:   " + FString::SanitizeFloat(BaseDamage) + "\n";
-		GripString += "Magazine Size: " + FString::FromInt(MagazineSize) + "\n";
-		GripString += "Reload Time:   " + FString::SanitizeFloat(ReloadTime);
-		return GripString;
-	}
-};
-
-USTRUCT(BlueprintType)
-struct FStockStats
-{
-	GENERATED_BODY()
-public:
-	float Accuracy = 0.0f;
-	float FireRate = 0.0f;
-	float BaseDamage = 0.0f;
-	UPROPERTY()
-	int32 MagazineSize = 0;
-	float ReloadTime = 0.0f;
-
-	/**
-	 * A debug ToString function that allows the easier printing of the weapon stats.
-	 * @return A string detailing the weapon stats stored in this struct.
-	 */
-	FString ToString() const
-	{
-		FString StockString = "";
-		StockString += "Accuracy:      " + FString::SanitizeFloat(Accuracy) + "\n";
-		StockString += "Fire Rate:     " + FString::SanitizeFloat(FireRate) + "\n";
-		StockString += "Base Damage:   " + FString::SanitizeFloat(BaseDamage) + "\n";
-		StockString += "Magazine Size: " + FString::FromInt(MagazineSize) + "\n";
-		StockString += "Reload Time:   " + FString::SanitizeFloat(ReloadTime);
-		return StockString;
 	}
 };
 
@@ -233,6 +114,8 @@ public:
 	}
 };
 
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class AGP_API UWeaponComponent : public UActorComponent
 {
@@ -248,11 +131,11 @@ public:
 	 */
 	void Reload();
 	void SetWeaponStats(const FWeaponStats& WeaponInfo);
-	void SetBarrelStats(const FBarrelStats& BarrelInfo);
-	void SetSightStats(const FSightStats& SightInfo);
-	void SetMagazineStats(const FMagazineStats& MagazineInfo);
-	void SetGripStats(const FGripStats& GripInfo);
-	void SetStockStats(const FStockStats& StockInfo);
+	void SetBarrelStats(const FAttachmentStats& BarrelInfo);
+	void SetSightStats(const FAttachmentStats& SightInfo);
+	void SetMagazineStats(const FAttachmentStats& MagazineInfo);
+	void SetGripStats(const FAttachmentStats& GripInfo);
+	void SetStockStats(const FAttachmentStats& StockInfo);
 	void SetFinalStats();
 
 	void PickUpBullet();
@@ -271,15 +154,15 @@ protected:
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
 	FWeaponStats WeaponStats;
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
-	FBarrelStats BarrelStats;
+	FAttachmentStats BarrelStats;
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
-	FSightStats SightStats;
+	FAttachmentStats SightStats;
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
-	FMagazineStats MagazineStats;
+	FAttachmentStats MagazineStats;
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
-	FGripStats GripStats;
+	FAttachmentStats GripStats;
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
-	FStockStats StockStats;
+	FAttachmentStats StockStats;
 	
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
 	int32 RoundsRemainingInMagazine;
@@ -310,6 +193,8 @@ private:
 	void MulticastFire(const FVector& BulletStart, const FWeaponHitInfo& HitInfo);
 	UFUNCTION(Server, Reliable)
 	void ServerFire(const FVector& BulletStart, const FVector& FireAtLocation);
+
+	void ResetAttachments();
 
 	// RELOAD FUNCTIONS
 	void ReloadImplementation();

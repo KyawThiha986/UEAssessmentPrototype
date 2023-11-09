@@ -4,6 +4,7 @@
 #include "HealthComponent.h"
 
 #include "PlayerCharacter.h"
+#include "AGP/AGPGameInstance.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
@@ -84,6 +85,8 @@ void UHealthComponent::OnDeath()
 	
 	if (ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner()))
 	{
+		DeathLocation = Character->GetActorLocation();
+		Explode(DeathLocation);
 		Character->OnDeath();
 	}
 }
@@ -110,4 +113,28 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	// ...
 }
+
+void UHealthComponent::Explode(FVector ExplodeLocation)
+{
+	ServerExplode(ExplodeLocation);
+}
+
+void UHealthComponent::VisualExplodeImplementation(FVector& ExplodeLocation)
+{
+	if (UAGPGameInstance* GameInstance = Cast<UAGPGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		GameInstance->SpawnExplosion(ExplodeLocation);
+	}
+}
+
+void UHealthComponent::MulticastExplode_Implementation(FVector ExplodeLocation)
+{
+	VisualExplodeImplementation(ExplodeLocation);
+}
+
+void UHealthComponent::ServerExplode_Implementation(const FVector& ExplodeLocation)
+{
+	MulticastExplode(ExplodeLocation);
+}
+
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseWeaponAttachment.h"
 #include "PickupBase.h"
 #include "PickupManagerSubsystem.h"
 #include "AGP/Characters/WeaponComponent.h"
@@ -12,16 +13,11 @@
  * 
  */
 UCLASS()
-class AGP_API ABarrelPickup : public APickupBase
+class AGP_API ABarrelPickup : public ABaseWeaponAttachment
 {
 	GENERATED_BODY()
 
 protected:
-
-	UPROPERTY(BlueprintReadOnly, Replicated)
-	ERarity BarrelRarity = ERarity::Common;
-	UPROPERTY(Replicated)
-	FBarrelStats BarrelStats;
 
 	virtual void BeginPlay() override;
 	virtual void OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -29,8 +25,6 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateBarrelPickupMaterial();
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 private:
 

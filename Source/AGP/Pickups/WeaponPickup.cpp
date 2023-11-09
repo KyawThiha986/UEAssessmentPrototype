@@ -39,13 +39,6 @@ void AWeaponPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	}
 }
 
-void AWeaponPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AWeaponPickup, WeaponRarity);
-	DOREPLIFETIME(AWeaponPickup, WeaponStats);
-}
-
 void AWeaponPickup::GenerateWeaponPickup()
 {
 	WeaponRarity = WeaponRarityPicker();

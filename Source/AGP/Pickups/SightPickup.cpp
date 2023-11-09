@@ -39,13 +39,6 @@ void ASightPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 }
 
-void ASightPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(ASightPickup, SightRarity);
-	DOREPLIFETIME(ASightPickup, SightStats);
-}
-
 void ASightPickup::GenerateSightPickup()
 {SightRarity = SightRarityPicker();
 	TArray<bool> GoodStats;

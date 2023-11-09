@@ -39,13 +39,6 @@ void AStockPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 }
 
-void AStockPickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AStockPickup, StockRarity);
-	DOREPLIFETIME(AStockPickup, StockStats);
-}
-
 void AStockPickup::GenerateStockPickup()
 {StockRarity = StockRarityPicker();
 	TArray<bool> GoodStats;

@@ -39,13 +39,6 @@ void AMagazinePickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, 
 	}
 }
 
-void AMagazinePickup::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AMagazinePickup, MagazineRarity);
-	DOREPLIFETIME(AMagazinePickup, MagazineStats);
-}
-
 void AMagazinePickup::GenerateMagazinePickup()
 {MagazineRarity = MagazineRarityPicker();
 	TArray<bool> GoodStats;
