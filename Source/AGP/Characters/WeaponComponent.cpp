@@ -164,8 +164,9 @@ bool UWeaponComponent::FireImplementation(const FVector& BulletStart, const FVec
 
 void UWeaponComponent::FireVisualImplementation(const FVector& BulletStart, const FWeaponHitInfo& HitInfo)
 {
-	FVector SpawnPosition = HitInfo.HitLocation;
-	SpawnPosition.Z += 10.0f;
+	// Spawned bullets normally may clip into walls, so a lerp between the bullet's start and end location is put in place...
+	// ...,so bullet spawns a little before the hit location to prevent them from falling through the ground
+	FVector SpawnPosition = FMath::Lerp(BulletStart,HitInfo.HitLocation, 0.9f);
 	DrawDebugLine(GetWorld(), BulletStart, HitInfo.HitLocation, FColor::Yellow, false, 0.2f, 0, 3.0f);
 	if (UAGPGameInstance* GameInstance = Cast<UAGPGameInstance>(GetWorld()->GetGameInstance()))
 	{
@@ -202,7 +203,7 @@ void UWeaponComponent::FireVisualImplementation(const FVector& BulletStart, cons
 				if (GetOwner() == Cast<APlayerCharacter>(GetOwner()))
 				{
 					GetWorld()->SpawnActor<APhysicsBulletPickup>(
-					GameInstance->GetBulletPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+					GameInstance->GetBulletPickupClass(), SpawnPosition, FRotator(0.0f, 0.0f, 45.0f));
 				}
 			}
 		}

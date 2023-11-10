@@ -35,7 +35,7 @@ protected:
 	 * as the key.
 	 */
 	TMap<int32, APickupBase*> SpawnedPickups;
-	float PickupSpawnRate = 2.5f;
+	float PickupSpawnRate = 4.0f;
 	float TimeSinceLastSpawn = 0.0f;
 	
 	virtual void Tick(float DeltaTime) override;

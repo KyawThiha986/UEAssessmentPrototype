@@ -8,36 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7aec0ae1-c927-4984-8fea-839197495a22" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AGP/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacterHUD.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacterHUD.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AGP/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AGP/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/GameManagers/BP_AGPGameInstance.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/GameManagers/BP_AGPGameInstance.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Pickups/BP_BulletPickup.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Pickups/BP_BulletPickup.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/FirstPersonContent/Weapon/Mesh/RifleBullet.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/FirstPersonContent/Weapon/Mesh/RifleBullet.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Levels/MultiplayerMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Levels/MultiplayerMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ParticleEffects/Bullets/ParticleMaterials/SparkleMaterial.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ParticleEffects/Bullets/ParticleMaterials/SparkleMaterial.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Sparkle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Sparkle.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/bulleticon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/bulleticon.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/crosshair.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/crosshair.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/AGPGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/AGPGameInstance.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/BaseCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/BaseCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/BaseCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/BaseCharacter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/HealthComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/HealthComponent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Materials/BulletMaterial.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Materials/BulletMaterial.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/BarrelPickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/BarrelPickup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/BaseWeaponAttachment.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/BaseWeaponAttachment.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/BaseWeaponAttachment.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/BaseWeaponAttachment.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/GripPickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/GripPickup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/MagazinePickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/MagazinePickup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/PhysicsBulletPickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/PhysicsBulletPickup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/PickupBase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/PickupBase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AGP/Pathfinding/NavigationNode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pathfinding/NavigationNode.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/SampleStaticMeshActor.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/SampleStaticMeshActor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/SightPickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/SightPickup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/StockPickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/StockPickup.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/WeaponPickup.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/WeaponPickup.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,36 +29,36 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2Xxtdomr5mMVWLTxIy6UG0W3OZy" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Assessment4-main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Assessment4-main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\Alexis986\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
-      "C:\\Users\\Alexis986\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
-      "C:\\Users\\Alexis986\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\Alexis986\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\Alexis986\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\Alexis986\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="AGP" type="CppProject" factoryName="C++ Project">
       <configuration_1>
@@ -152,6 +131,7 @@
       <option name="presentableId" value="Default" />
       <updated>1699582649611</updated>
       <workItem from="1699582652533" duration="3941000" />
+      <workItem from="1699639820372" duration="10453000" />
     </task>
     <servers />
   </component>
