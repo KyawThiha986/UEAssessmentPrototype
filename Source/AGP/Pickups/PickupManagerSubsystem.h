@@ -42,7 +42,7 @@ protected:
 
 private:
 
-	void SpawnWeaponPickup();
+	void SpawnPickup();
 	void PopulateSpawnLocations();
 	
 };

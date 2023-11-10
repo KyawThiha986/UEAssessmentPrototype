@@ -36,12 +36,12 @@ void UPickupManagerSubsystem::Tick(float DeltaTime)
 	TimeSinceLastSpawn += DeltaTime;
 	if (TimeSinceLastSpawn >= PickupSpawnRate)
 	{
-		SpawnWeaponPickup();
+		SpawnPickup();
 		TimeSinceLastSpawn = 0.0f;
 	}
 }
 
-void UPickupManagerSubsystem::SpawnWeaponPickup()
+void UPickupManagerSubsystem::SpawnPickup()
 {
 	if (PossibleSpawnLocations.IsEmpty())
 	{

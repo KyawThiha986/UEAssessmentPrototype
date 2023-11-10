@@ -39,18 +39,20 @@ protected:
 	UFUNCTION()
 	void UpdateHealthBar();
 
-	
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	// Emit explosion particles at where the character died
 	void Explode(FVector ExplodeLocation);
 
+	// For storing a character's location of death
 	UPROPERTY(Replicated)
 	FVector DeathLocation;
 private:
 	void VisualExplodeImplementation(FVector& ExplodeLocation);
-	
+
+	// Makes sure everyone sees the explosion
 	UFUNCTION(Server, Reliable)
 	void ServerExplode(const FVector& ExplodeLocation);
 	UFUNCTION(NetMulticast, Reliable)

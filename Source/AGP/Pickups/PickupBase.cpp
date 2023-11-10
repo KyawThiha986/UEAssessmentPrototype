@@ -22,8 +22,8 @@ APickupBase::APickupBase()
 	// Specifies that the root transform of this actor should be the transform of the Collider component.
 	SetRootComponent(PickupCollider);
 	
-	// Attaches the static mesh component to be a child of the collider. This means that when the actor's root transform
-	// is moved (i.e. the collider transform) then the mesh will move with it.
+	// Attaches the static mesh and component to be a child of the collider and the sparkle to be the child of the mesh. This means that when the actor's root transform
+	// is moved (i.e. the collider transform) then the mesh will move with the collider, and it will cause the sparkles to move with it.
 	PickupMesh->SetupAttachment(GetRootComponent());
 	Sparkle->SetupAttachment(PickupMesh);
 }

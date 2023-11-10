@@ -15,11 +15,9 @@ class AGP_API ABaseWeaponAttachment : public APickupBase
 {
 	GENERATED_BODY()
 
-	
-	
 protected:
 	
-	//Declare rarity variables of weapon and attachments 
+	//Declare rarity and attribute variables of weapon and attachments to be used by its corresponding child pickup classes
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	ERarity WeaponRarity = ERarity::Common;
 	UPROPERTY(BlueprintReadOnly, Replicated)
@@ -33,7 +31,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	ERarity StockRarity = ERarity::Common;
 	
-	//Declare attribute variables of weapons and attachments
 	UPROPERTY(Replicated)
 	FWeaponStats WeaponStats;
 	UPROPERTY(Replicated)

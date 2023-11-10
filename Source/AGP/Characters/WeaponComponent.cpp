@@ -195,12 +195,14 @@ void UWeaponComponent::FireVisualImplementation(const FVector& BulletStart, cons
 				// the gunshot has come from through our speakers or headphones.
 				GameInstance->PlayGunshotSoundAtLocation(BulletStart);
 			}
+
+			// Spawn a bullet visible to everyone at where the bullet hit
 			if (GetOwnerRole() == ROLE_Authority)
 			{
 				if (GetOwner() == Cast<APlayerCharacter>(GetOwner()))
 				{
 					GetWorld()->SpawnActor<APhysicsBulletPickup>(
-                    				GameInstance->GetBulletPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+					GameInstance->GetBulletPickupClass(), SpawnPosition, FRotator::ZeroRotator);
 				}
 			}
 		}
@@ -227,76 +229,99 @@ void UWeaponComponent::MulticastFire_Implementation(const FVector& BulletStart, 
 
 void UWeaponComponent::SetWeaponStats(const FWeaponStats& WeaponInfo)
 {
+	// Set new weapon stats
 	this->WeaponStats = WeaponInfo;
 
+	// Transfer ammo from the old weapon
 	FinalStats.ReserveAmmo += RoundsRemainingInMagazine;
 	ReserveAmmoLeft = FinalStats.ReserveAmmo;
 
+	// Remove all upgrades from attachments
 	ResetAttachments();
-	
-	this->FinalStats.MagazineSize = WeaponStats.MagazineSize + BarrelStats.MagazineSize + SightStats.MagazineSize+ MagazineStats.MagazineSize + GripStats.MagazineSize + StockStats.MagazineSize;
+
+	// ...Then update the final stats of the weapon
+	this->FinalStats.MagazineSize = WeaponStats.MagazineSize + AttachmentStats[0].MagazineSize + AttachmentStats[1].MagazineSize + AttachmentStats[2].MagazineSize + AttachmentStats[3].MagazineSize + AttachmentStats[4].MagazineSize;
 	
 	// Set the number of bullets to the magazine size
 	RoundsRemainingInMagazine = FinalStats.MagazineSize;
 }
 
+// Sets all values from all attachment variables back to 0;
 void UWeaponComponent::ResetAttachments()
 {
-	BarrelStats.Accuracy = 0.0f; SightStats.Accuracy = 0.0f; MagazineStats.Accuracy = 0.0f; GripStats.Accuracy = 0.0f; StockStats.Accuracy = 0.0f;
-	BarrelStats.FireRate = 0.0f; SightStats.FireRate = 0.0f; MagazineStats.FireRate = 0.0f; GripStats.FireRate = 0.0f; StockStats.FireRate = 0.0f;
-	BarrelStats.BaseDamage = 0.0f; SightStats.BaseDamage = 0.0f; MagazineStats.BaseDamage = 0.0f; GripStats.BaseDamage = 0.0f; StockStats.BaseDamage = 0.0f;
-	BarrelStats.MagazineSize = 0; SightStats.MagazineSize = 0; MagazineStats.MagazineSize = 0; GripStats.MagazineSize = 0; StockStats.MagazineSize = 0;
-	BarrelStats.ReloadTime = 0.0f; SightStats.ReloadTime = 0.0f; MagazineStats.ReloadTime = 0.0f; GripStats.ReloadTime = 0.0f; StockStats.ReloadTime = 0.0f;
+	for (int i = 0; i < 4; i++)
+	{
+		AttachmentStats[i].Accuracy = 0.0f;
+		AttachmentStats[i].FireRate = 0.0f;
+		AttachmentStats[i].BaseDamage = 0.0f;
+		AttachmentStats[i].MagazineSize = 0;
+		AttachmentStats[i].ReloadTime = 0.0f;
+	}
 }
 
 void UWeaponComponent::SetBarrelStats(const FAttachmentStats& BarrelInfo)
 {
-	this->BarrelStats = BarrelInfo;
+	this->AttachmentStats[0] = BarrelInfo;
 }
 
 void UWeaponComponent::SetSightStats(const FAttachmentStats& SightInfo)
 {
-	this->SightStats = SightInfo;
+	this->AttachmentStats[1] = SightInfo;
 }
 
 void UWeaponComponent::SetMagazineStats(const FAttachmentStats& MagazineInfo)
 {
-	this->MagazineStats = MagazineInfo;
+	this->AttachmentStats[2] = MagazineInfo;
 }
 
 void UWeaponComponent::SetGripStats(const FAttachmentStats& GripInfo)
 {
-	this->GripStats = GripInfo;
+	this->AttachmentStats[3] = GripInfo;
 }
 
 void UWeaponComponent::SetStockStats(const FAttachmentStats& StockInfo)
 {
-	this->StockStats = StockInfo;
+	this->AttachmentStats[4] = StockInfo;
 }
 
 void UWeaponComponent::SetFinalStats()
 {
-	this->FinalStats.Accuracy = WeaponStats.Accuracy + BarrelStats.Accuracy + SightStats.Accuracy + MagazineStats.Accuracy + GripStats.Accuracy + StockStats.Accuracy;
-	this->FinalStats.FireRate = WeaponStats.FireRate - (BarrelStats.FireRate + SightStats.FireRate + MagazineStats.FireRate + GripStats.FireRate + StockStats.FireRate);
-	this->FinalStats.BaseDamage = WeaponStats.BaseDamage + BarrelStats.BaseDamage + SightStats.BaseDamage + MagazineStats.BaseDamage + GripStats.BaseDamage + StockStats.BaseDamage;
-	this->FinalStats.MagazineSize = WeaponStats.MagazineSize + BarrelStats.MagazineSize + SightStats.MagazineSize+ MagazineStats.MagazineSize + GripStats.MagazineSize + StockStats.MagazineSize;
-	this->FinalStats.ReloadTime = WeaponStats.ReloadTime - (BarrelStats.ReloadTime + SightStats.ReloadTime + MagazineStats.ReloadTime + GripStats.ReloadTime + StockStats.ReloadTime);
+	// First, set the final stats with the weapons stats
+	this->FinalStats.Accuracy = WeaponStats.Accuracy;
+	this->FinalStats.FireRate = WeaponStats.FireRate;
+	this->FinalStats.BaseDamage = WeaponStats.BaseDamage ;
+	this->FinalStats.MagazineSize = WeaponStats.MagazineSize;
+	this->FinalStats.ReloadTime = WeaponStats.ReloadTime;
+
+	// Then, modify the final stats with the attributes from all attachments together
+	for (int i = 0; i < 4; i++)
+	{
+		this->FinalStats.Accuracy += AttachmentStats[i].Accuracy;
+		this->FinalStats.FireRate -= AttachmentStats[i].FireRate;
+		this->FinalStats.BaseDamage += AttachmentStats[i].BaseDamage;
+		this->FinalStats.MagazineSize += AttachmentStats[i].MagazineSize;
+		this->FinalStats.ReloadTime -= AttachmentStats[i].ReloadTime;
+	}
 	
+	// To make sure the accuracy value don't go beyond 1.0f and decrease weapon accuracy in the process;
 	if(FinalStats.Accuracy > 0.999f)
 	{
 		FinalStats.Accuracy = 0.999f;
 	}
-		
+
+	// To make sure the accuracy value don't go below 0.0f and decrease weapon fire rate in the process, and to prevent the weapon from firing every frame;
 	if(FinalStats.FireRate < 0.015f)
 	{
 		FinalStats.FireRate = 0.075f;
 	}
-		
+
+	// Sets the fastest reload time possible
 	if(FinalStats.ReloadTime < 0.2f)
 	{
 		FinalStats.ReloadTime = 0.2f;
 	}
 
+	// If the current ammo exceeds the magazine size, transfer all excess ammo to reserve
 	if(RoundsRemainingInMagazine > FinalStats.MagazineSize)
 	{
 		FinalStats.ReserveAmmo += RoundsRemainingInMagazine - FinalStats.MagazineSize;
@@ -307,6 +332,7 @@ void UWeaponComponent::SetFinalStats()
 	UpdateAmmoUI();
 }
 
+// For every bullet pickup you collide, add 1 bullet to reserve
 void UWeaponComponent::PickUpBullet()
 {
 	FinalStats.ReserveAmmo += 1;
@@ -319,6 +345,7 @@ bool UWeaponComponent::IsMagazineEmpty()
 	return RoundsRemainingInMagazine <= 0;
 }
 
+// Replicate current ammo, reserve ammo, and weapon/attachment stats
 void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -337,13 +364,12 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 }
 
 
 void UWeaponComponent::UpdateAmmoUI()
 {
+	// Update current ammo, magazine size and reserve ammo values for the UI
 	if (APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(GetOwner()))
 	{
 		PlayerCharacter->UpdateAmmoUI(RoundsRemainingInMagazine, FinalStats.MagazineSize, ReserveAmmoLeft);
@@ -360,7 +386,7 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	if (bIsReloading)
 	{
 		CurrentReloadDuration += DeltaTime;
-		if (CurrentReloadDuration >= WeaponStats.ReloadTime)
+		if (CurrentReloadDuration >= FinalStats.ReloadTime)
 		{
 			bIsReloading = false;
 			CompleteReload();

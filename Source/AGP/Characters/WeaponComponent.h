@@ -25,6 +25,7 @@ struct FWeaponHitInfo
 	EWeaponHitType HitType;
 };
 
+// Declare attributes for the weapon 
 USTRUCT(BlueprintType)
 struct FWeaponStats
 {
@@ -55,6 +56,7 @@ public:
 	}
 };
 
+// Declare attributes for all attachments
 USTRUCT(BlueprintType)
 struct FAttachmentStats
 {
@@ -83,6 +85,7 @@ public:
 	}
 };
 
+// Declare final attributes from the weapon and attachment attributes combined, and declare reserve ammo
 USTRUCT(BlueprintType)
 struct FFinalStats
 {
@@ -113,8 +116,6 @@ public:
 		return FinalString;
 	}
 };
-
-
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class AGP_API UWeaponComponent : public UActorComponent
@@ -151,6 +152,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	// Declare variables with respective attributes
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
 	FWeaponStats WeaponStats;
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
@@ -163,13 +165,24 @@ protected:
 	FAttachmentStats GripStats;
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
 	FAttachmentStats StockStats;
+
+	// Array to store attachments
+	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
+	TArray<FAttachmentStats> AttachmentStats =
+	{
+		BarrelStats,
+		SightStats,
+		MagazineStats,
+		GripStats,
+		StockStats
+	};
 	
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
 	int32 RoundsRemainingInMagazine;
+	
 	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
 	int32 ReserveAmmoLeft;
-	UPROPERTY(ReplicatedUsing=UpdateAmmoUI)
-	int32 ExcessAmmo;
+	
 	float TimeSinceLastShot;
 	bool bIsReloading = false;
 

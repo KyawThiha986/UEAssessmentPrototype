@@ -18,6 +18,7 @@ void APhysicsBulletPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedCompon
 	//Super::OnPickupOverlap(OverlappedComponent, OtherActor, OtherComponent, OtherBodyIndex, bFromSweep, HitInfo);
 	// UE_LOG(LogTemp, Display, TEXT("Overlap event occurred on WeaponPickup"))
 
+	// Check if it's a player that is overlapping with the bullet's collision
 	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
 	{
 		Player->PickBullet();
@@ -29,6 +30,7 @@ void APhysicsBulletPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedCompon
 	}
 }
 
+// Makes the bullet destroy itself
 void APhysicsBulletPickup::DestroySelf()
 {
 	GetWorld() -> DestroyActor(this);

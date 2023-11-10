@@ -21,8 +21,6 @@ void AGripPickup::BeginPlay()
 void AGripPickup::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                     UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& HitInfo)
 {
-	//Super::OnPickupOverlap(OverlappedComponent, OtherActor, OtherComponent, OtherBodyIndex, bFromSweep, HitInfo);
-	// UE_LOG(LogTemp, Display, TEXT("Overlap event occurred on WeaponPiGrip
 	if (ABaseCharacter* Player = Cast<ABaseCharacter>(OtherActor))
 	{
 		Player->EquipGrip(GripStats);

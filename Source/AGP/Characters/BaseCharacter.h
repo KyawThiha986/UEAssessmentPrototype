@@ -27,7 +27,7 @@ public:
 	void EquipMagazine(const FAttachmentStats& MagazineStats = FAttachmentStats());
 	void EquipGrip(const FAttachmentStats& GripStats = FAttachmentStats());
 	void EquipStock(const FAttachmentStats& StockStats = FAttachmentStats());
-
+	
 	void PickBullet();
 	
 	UFUNCTION(BlueprintImplementableEvent)

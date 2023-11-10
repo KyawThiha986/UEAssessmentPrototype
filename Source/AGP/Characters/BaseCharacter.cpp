@@ -67,7 +67,7 @@ void ABaseCharacter::OnDeath()
 
 		if (AEnemyCharacter* EnemyCharacter = Cast<AEnemyCharacter>(this))
 		{
-
+			// Tell the GameMode to respawn this enemy.
 			GameMode->RespawnEnemy(EnemyCharacter);
 		}
 	}
@@ -99,7 +99,7 @@ void ABaseCharacter::EquipBarrel(const FAttachmentStats& BarrelStats)
 	{
 		if (HasWeapon())
 		{
-			// Set the weapons stats to the given weapon stats.
+			// Set the barrel stats to the given barrel stats, and then calculate the final stats for the weapon.
 			UE_LOG(LogTemp, Display, TEXT("Equipping barrel: \n%s"), *BarrelStats.ToString())
 			WeaponComponent->SetBarrelStats(BarrelStats);
 			WeaponComponent->SetFinalStats();
@@ -115,7 +115,7 @@ void ABaseCharacter::EquipSight(const FAttachmentStats& SightStats)
 	{
 		if (HasWeapon())
 		{
-			// Set the weapons stats to the given weapon stats.
+			// Set the sight stats to the given sight stats, and then calculate the final stats for the weapon.
 			UE_LOG(LogTemp, Display, TEXT("Equipping sight: \n%s"), *SightStats.ToString())
 			WeaponComponent->SetSightStats(SightStats);
 			WeaponComponent->SetFinalStats();
@@ -130,7 +130,7 @@ void ABaseCharacter::EquipMagazine(const FAttachmentStats& MagazineStats)
 	{
 		if (HasWeapon())
 		{
-			// Set the weapons stats to the given weapon stats.
+			// Set the magazine stats to the given magazine stats, and then calculate the final stats for the weapon.
 			UE_LOG(LogTemp, Display, TEXT("Equipping magazine: \n%s"), *MagazineStats.ToString())
 			WeaponComponent->SetMagazineStats(MagazineStats);
 			WeaponComponent->SetFinalStats();
@@ -145,7 +145,7 @@ void ABaseCharacter::EquipGrip(const FAttachmentStats& GripStats)
 	{
 		if (HasWeapon())
 		{
-			// Set the weapons stats to the given weapon stats.
+			// Set the grip stats to the given grip stats, and then calculate the final stats for the weapon.
 			UE_LOG(LogTemp, Display, TEXT("Equipping grip: \n%s"), *GripStats.ToString())
 			WeaponComponent->SetGripStats(GripStats);
 			WeaponComponent->SetFinalStats();
@@ -160,7 +160,7 @@ void ABaseCharacter::EquipStock(const FAttachmentStats& StockStats)
 	{
 		if (HasWeapon())
 		{
-			// Set the weapons stats to the given weapon stats.
+			// Set the stock stats to the given stock stats, and then calculate the final stats for the weapon.
 			UE_LOG(LogTemp, Display, TEXT("Equipping stock: \n%s"), *StockStats.ToString())
 			WeaponComponent->SetStockStats(StockStats);
 			WeaponComponent->SetFinalStats();
@@ -171,6 +171,7 @@ void ABaseCharacter::EquipStock(const FAttachmentStats& StockStats)
 
 void ABaseCharacter::PickBullet()
 {
+	// If the caller's role is an authority, call the pick up function inside weapon component
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		if (HasWeapon())
@@ -204,7 +205,7 @@ void ABaseCharacter::EquipWeaponImplementation(bool bEquipWeapon, const FWeaponS
 	// At this point we should have a WeaponComponent if we are trying to equip a weapon.
 	if (HasWeapon())
 	{
-		// Set the weapons stats to the given weapon stats.
+		// Set the weapons stats to the given weapon stats, and then caluclate the final stats for the wepaon.
 		UE_LOG(LogTemp, Display, TEXT("Equipping weapon: \n%s"), *WeaponStats.ToString())
 		WeaponComponent->SetWeaponStats(WeaponStats);
 		WeaponComponent->SetFinalStats();

@@ -9,7 +9,8 @@
 void ABaseWeaponAttachment::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
+
+	// Replicates rarity and stats of all pickups (Except bullet pickup)
 	DOREPLIFETIME(ABaseWeaponAttachment, WeaponRarity);
 	DOREPLIFETIME(ABaseWeaponAttachment, BarrelRarity);
 	DOREPLIFETIME(ABaseWeaponAttachment, SightRarity);

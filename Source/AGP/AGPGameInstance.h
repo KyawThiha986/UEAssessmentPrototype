@@ -57,7 +57,7 @@ protected:
 	TSubclassOf<APhysicsBulletPickup> BulletPickupClass;
 
 	/**
-	 * Stores a reference to the particle system for a ground hit. Needs to be set in the BP_AGPGameInstance.
+	 * Stores a reference to the particle system for a ground and character hit as well as pickup sparkles and death explosion. Needs to be set in the BP_AGPGameInstance.
 	 */
 	UPROPERTY(EditDefaultsOnly, Category="Particle Systems")
 	class UNiagaraSystem* GroundHitParticles;
