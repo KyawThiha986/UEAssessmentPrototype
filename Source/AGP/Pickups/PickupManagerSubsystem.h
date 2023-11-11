@@ -37,6 +37,7 @@ protected:
 	TMap<int32, APickupBase*> SpawnedPickups;
 	float PickupSpawnRate = 4.0f;
 	float TimeSinceLastSpawn = 0.0f;
+	int32 FirstSpawns = 0;
 	
 	virtual void Tick(float DeltaTime) override;
 

@@ -171,7 +171,7 @@ void ABaseCharacter::EquipStock(const FAttachmentStats& StockStats)
 
 void ABaseCharacter::PickBullet()
 {
-	// If the caller's role is an authority, call the pick up function inside weapon component
+	// If the caller's role is an authority, and has a weapon, call the bullet pick up function inside weapon component
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		if (HasWeapon())

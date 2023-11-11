@@ -9,13 +9,17 @@
   <component name="ChangeListManager">
     <list default="true" id="7aec0ae1-c927-4984-8fea-839197495a22" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AGP/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AGP/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Audio/GunshotCue.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Audio/GunshotCue.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/GameManagers/BP_AGPGameInstance.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/GameManagers/BP_AGPGameInstance.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/Pickups/BP_BulletPickup.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Pickups/BP_BulletPickup.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/FirstPersonContent/Weapon/Mesh/RifleBullet.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/FirstPersonContent/Weapon/Mesh/RifleBullet.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Levels/MultiplayerMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Levels/MultiplayerMap.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Materials/BulletMaterial.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Materials/BulletMaterial.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AGP/AGPGameInstance.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/AGPGameInstance.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AGP/AGPGameInstance.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/AGPGameInstance.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/BaseCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/BaseCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AGP/Pathfinding/NavigationNode.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pathfinding/NavigationNode.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AGP/Pickups/PickupManagerSubsystem.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -132,6 +136,7 @@
       <updated>1699582649611</updated>
       <workItem from="1699582652533" duration="3941000" />
       <workItem from="1699639820372" duration="10453000" />
+      <workItem from="1699665854919" duration="10525000" />
     </task>
     <servers />
   </component>
@@ -140,5 +145,16 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/AGP/Characters/WeaponComponent.h</url>
+          <line>220</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

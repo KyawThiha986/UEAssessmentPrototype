@@ -75,6 +75,26 @@ void UAGPGameInstance::SpawnCharacterHitParticles(const FVector& Location)
   UGameplayStatics::PlaySound2D(GetWorld(), GunshotSoundCue);
  }
 
+ void UAGPGameInstance::PlayReloadStartAtLocation(const FVector& Location)
+ {
+  UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReloadStartCue, Location, FRotator::ZeroRotator);
+ }
+
+ void UAGPGameInstance::PlayReloadStart2D()
+ {
+  UGameplayStatics::PlaySound2D(GetWorld(), ReloadStartCue);
+ }
+
+ void UAGPGameInstance::PlayReloadFinishAtLocation(const FVector& Location)
+ {
+  UGameplayStatics::PlaySoundAtLocation(GetWorld(), ReloadFinishCue, Location, FRotator::ZeroRotator);
+ }
+
+ void UAGPGameInstance::PlayReloadFinish2D()
+ {
+  UGameplayStatics::PlaySound2D(GetWorld(), ReloadFinishCue);
+ }
+
 
 
 

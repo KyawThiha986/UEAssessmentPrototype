@@ -26,6 +26,11 @@ void UWeaponComponent::Fire(const FVector& BulletStart, const FVector& FireAtLoc
 	ServerFire(BulletStart, FireAtLocation);
 }
 
+bool UWeaponComponent::IsMagazineEmpty()
+{
+	return RoundsRemainingInMagazine <= 0;
+}
+
 void UWeaponComponent::Reload()
 {
 	if (GetOwnerRole() == ROLE_Authority)
@@ -46,9 +51,29 @@ void UWeaponComponent::ReloadImplementation()
 	bIsReloading = true;
 }
 
+void UWeaponComponent::MulticastReload_Implementation()
+{ 
+	if (UAGPGameInstance* GameInstance = Cast<UAGPGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		if (const APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+		{
+			if (OwnerPawn->IsLocallyControlled())
+			{
+				GameInstance->PlayReloadStart2D();
+			} else
+			{
+				// Otherwise we want to play it at a particular 3d location so that we can detect which direction
+				// the gunshot has come from through our speakers or headphones.
+				GameInstance->PlayReloadStartAtLocation(GetOwner()->GetActorLocation());
+			}
+		}
+	}
+}
+
 void UWeaponComponent::ServerReload_Implementation()
 {
 	ReloadImplementation();
+	MulticastReload();
 }
 
 void UWeaponComponent::CompleteReload()
@@ -95,7 +120,27 @@ void UWeaponComponent::CompleteReload()
 	{
 		RoundsRemainingInMagazine = FinalStats.MagazineSize;
 	}
+	MulticastCompleteReload();
 	UpdateAmmoUI();
+}
+
+void UWeaponComponent::MulticastCompleteReload_Implementation()
+{
+	if (UAGPGameInstance* GameInstance = Cast<UAGPGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		if (const APawn* OwnerPawn = Cast<APawn>(GetOwner()))
+		{
+			if (OwnerPawn->IsLocallyControlled())
+			{
+				GameInstance->PlayReloadFinish2D();
+			} else
+			{
+				// Otherwise we want to play it at a particular 3d location so that we can detect which direction
+				// the gunshot has come from through our speakers or headphones.
+				GameInstance->PlayReloadFinishAtLocation(GetOwner()->GetActorLocation());
+			}
+		}
+	}
 }
 
 bool UWeaponComponent::FireImplementation(const FVector& BulletStart, const FVector& FireAtLocation,
@@ -247,19 +292,6 @@ void UWeaponComponent::SetWeaponStats(const FWeaponStats& WeaponInfo)
 	RoundsRemainingInMagazine = FinalStats.MagazineSize;
 }
 
-// Sets all values from all attachment variables back to 0;
-void UWeaponComponent::ResetAttachments()
-{
-	for (int i = 0; i < 4; i++)
-	{
-		AttachmentStats[i].Accuracy = 0.0f;
-		AttachmentStats[i].FireRate = 0.0f;
-		AttachmentStats[i].BaseDamage = 0.0f;
-		AttachmentStats[i].MagazineSize = 0;
-		AttachmentStats[i].ReloadTime = 0.0f;
-	}
-}
-
 void UWeaponComponent::SetBarrelStats(const FAttachmentStats& BarrelInfo)
 {
 	this->AttachmentStats[0] = BarrelInfo;
@@ -333,17 +365,25 @@ void UWeaponComponent::SetFinalStats()
 	UpdateAmmoUI();
 }
 
+// Sets all values from all attachment variables back to 0;
+void UWeaponComponent::ResetAttachments()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		AttachmentStats[i].Accuracy = 0.0f;
+		AttachmentStats[i].FireRate = 0.0f;
+		AttachmentStats[i].BaseDamage = 0.0f;
+		AttachmentStats[i].MagazineSize = 0;
+		AttachmentStats[i].ReloadTime = 0.0f;
+	}
+}
+
 // For every bullet pickup you collide, add 1 bullet to reserve
 void UWeaponComponent::PickUpBullet()
 {
 	FinalStats.ReserveAmmo += 1;
 	ReserveAmmoLeft = FinalStats.ReserveAmmo;
 	UpdateAmmoUI();
-}
-
-bool UWeaponComponent::IsMagazineEmpty()
-{
-	return RoundsRemainingInMagazine <= 0;
 }
 
 // Replicate current ammo, reserve ammo, and weapon/attachment stats

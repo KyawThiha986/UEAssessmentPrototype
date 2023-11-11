@@ -55,53 +55,72 @@ void UPickupManagerSubsystem::SpawnPickup()
 		int32 Index = FMath::RandRange(0, PossibleSpawnLocations.Num()-1);
 		FVector SpawnPosition = PossibleSpawnLocations[Index];
 		SpawnPosition.Z += 50.0f;
-		int32 PickPool = FMath::RandRange(1, 6);
+		int32 PickPool = FMath::RandRange(1, 6);;
 
-		// If the map contains a pickup at this index key then destroy it.
-		// Otherwise get the map ready to store the about to be spawned pickup.
-		if (SpawnedPickups.Contains(Index))
+		// First two spawned pickups will always be weapon pickups
+		if (FirstSpawns <= 2)
 		{
-			// Destroy the WeaponPickup at that location in the Map if one already exists.
-			GetWorld()->DestroyActor(SpawnedPickups[Index]);
-			SpawnedPickups[Index] = nullptr;
-		} else
-		{
-			// If it doesn't exist, then add a section to the map that includes this Index position.
-			SpawnedPickups.Add(Index, nullptr);
+			// If the map contains a pickup at this index key then destroy it.
+			// Otherwise get the map ready to store the about to be spawned pickup.
+			if (SpawnedPickups.Contains(Index))
+			{
+				// Destroy the pickup at that location in the Map if one already exists.
+				GetWorld()->DestroyActor(SpawnedPickups[Index]);
+				SpawnedPickups[Index] = nullptr;
+			}
+			else
+			{
+				// If it doesn't exist, then add a section to the map that includes this Index position.
+				SpawnedPickups.Add(Index, nullptr);
+			}
+			
+			SpawnedPickups[Index] = GetWorld()->SpawnActor<AWeaponPickup>(
+			GameInstance->GetWeaponPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+			FirstSpawns += 1;
 		}
-
-		// Now we are here, we know that there is a free slot at the given Index key position to spawn a new
-		// weapon pickup.
-		switch(PickPool)
+		else
 		{
-		default:
-			SpawnedPickups[Index] = GetWorld()->SpawnActor<AWeaponPickup>(
-			GameInstance->GetWeaponPickupClass(), SpawnPosition, FRotator::ZeroRotator);
-			break;
-		case 1:
-			SpawnedPickups[Index] = GetWorld()->SpawnActor<AWeaponPickup>(
-			GameInstance->GetWeaponPickupClass(), SpawnPosition, FRotator::ZeroRotator);
-			break;
-		case 2:
-			SpawnedPickups[Index] = GetWorld()->SpawnActor<ABarrelPickup>(
-			GameInstance->GetBarrelPickupClass(), SpawnPosition, FRotator::ZeroRotator);
-			break;
-		case 3:
-			SpawnedPickups[Index] = GetWorld()->SpawnActor<ASightPickup>(
-			GameInstance->GetSightPickupClass(), SpawnPosition, FRotator::ZeroRotator);
-			break;
-		case 4:
-			SpawnedPickups[Index] = GetWorld()->SpawnActor<AMagazinePickup>(
-			GameInstance->GetMagazinePickupClass(), SpawnPosition, FRotator::ZeroRotator);
-			break;
-		case 5:
-			SpawnedPickups[Index] = GetWorld()->SpawnActor<AGripPickup>(
-			GameInstance->GetGripPickupClass(), SpawnPosition, FRotator::ZeroRotator);
-			break;
-		case 6:
-			SpawnedPickups[Index] = GetWorld()->SpawnActor<AStockPickup>(
-			GameInstance->GetStockPickupClass(), SpawnPosition, FRotator::ZeroRotator);
-			break;
+			if (SpawnedPickups.Contains(Index))
+			{
+				GetWorld()->DestroyActor(SpawnedPickups[Index]);
+				SpawnedPickups[Index] = nullptr;
+			} else
+			{
+				SpawnedPickups.Add(Index, nullptr);
+			}
+			// Now we are here, we know that there is a free slot at the given Index key position to spawn one of the
+			// pickups from the given pool.
+			switch(PickPool)
+			{
+			default:
+				SpawnedPickups[Index] = GetWorld()->SpawnActor<AWeaponPickup>(
+				GameInstance->GetWeaponPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				break;
+			case 1:
+				SpawnedPickups[Index] = GetWorld()->SpawnActor<AWeaponPickup>(
+				GameInstance->GetWeaponPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				break;
+			case 2:
+				SpawnedPickups[Index] = GetWorld()->SpawnActor<ABarrelPickup>(
+				GameInstance->GetBarrelPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				break;
+			case 3:
+				SpawnedPickups[Index] = GetWorld()->SpawnActor<ASightPickup>(
+				GameInstance->GetSightPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				break;
+			case 4:
+				SpawnedPickups[Index] = GetWorld()->SpawnActor<AMagazinePickup>(
+				GameInstance->GetMagazinePickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				break;
+			case 5:
+				SpawnedPickups[Index] = GetWorld()->SpawnActor<AGripPickup>(
+				GameInstance->GetGripPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				break;
+			case 6:
+				SpawnedPickups[Index] = GetWorld()->SpawnActor<AStockPickup>(
+        		GameInstance->GetStockPickupClass(), SpawnPosition, FRotator::ZeroRotator);
+				break;
+			}	
 		}
 	}
 }

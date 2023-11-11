@@ -213,5 +213,10 @@ private:
 	void ReloadImplementation();
 	UFUNCTION(Server, Reliable)
 	void ServerReload();
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastReload();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastCompleteReload();
 	
 };

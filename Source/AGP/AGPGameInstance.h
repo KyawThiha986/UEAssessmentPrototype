@@ -34,6 +34,10 @@ public:
 
 	void PlayGunshotSoundAtLocation(const FVector& Location);
 	void PlayGunshotSound2D();
+	void PlayReloadStartAtLocation(const FVector& Location);
+	void PlayReloadStart2D();
+	void PlayReloadFinishAtLocation(const FVector& Location);
+	void PlayReloadFinish2D();
 	void SpawnCharacterHitParticles(const FVector& Location);
 	void SpawnSparkleParticles(const FVector& Location);
 	void SpawnExplosion(const FVector& Location);
@@ -73,6 +77,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Sound Effects")
 	class USoundCue* GunshotSoundCue;
 
-	
+	UPROPERTY(EditDefaultsOnly, Category="Sound Effects")
+	class USoundCue* ReloadStartCue;
+
+	UPROPERTY(EditDefaultsOnly, Category="Sound Effects")
+	class USoundCue* ReloadFinishCue;
 	
 };
