@@ -29,6 +29,7 @@ void ANavigationNode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+/*
 	FColor SphereColor = FColor::Blue;
 	if (ConnectedNodes.Contains(this))
 	{
@@ -50,6 +51,7 @@ void ANavigationNode::Tick(float DeltaTime)
 				LineColor, false, -1, 0, 5.0f);
 		}
 	}
+	*/
 }
 
 bool ANavigationNode::ShouldTickIfViewportsOnly() const
