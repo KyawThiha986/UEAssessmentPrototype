@@ -42,7 +42,7 @@ void AStockPickup::GenerateStockPickup()
 	switch (StockRarity)
 	{
 	case ERarity::Legendary:
-		StockStats.ReloadTime = FMath::RandRange(0.15f, 0.4f);
+		StockStats.ReloadTime = FMath::RandRange(0.45f, 0.7f);
 		GoodStats = StockStatPicker(2, 5);
 		break;
 	case ERarity::Master:

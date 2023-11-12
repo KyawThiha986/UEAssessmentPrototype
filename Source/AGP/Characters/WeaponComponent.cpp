@@ -49,6 +49,7 @@ void UWeaponComponent::ReloadImplementation()
 	
 	UE_LOG(LogTemp, Display, TEXT("Start Reload"))
 	bIsReloading = true;
+	MulticastReload();
 }
 
 void UWeaponComponent::MulticastReload_Implementation()
@@ -73,7 +74,6 @@ void UWeaponComponent::MulticastReload_Implementation()
 void UWeaponComponent::ServerReload_Implementation()
 {
 	ReloadImplementation();
-	MulticastReload();
 }
 
 void UWeaponComponent::CompleteReload()
@@ -275,7 +275,7 @@ void UWeaponComponent::MulticastFire_Implementation(const FVector& BulletStart, 
 
 void UWeaponComponent::SetWeaponStats(const FWeaponStats& WeaponInfo)
 {
-	// Set new weapon stats
+	// Prepare new weapon stats
 	this->WeaponStats = WeaponInfo;
 
 	// Transfer ammo from the old weapon
@@ -285,10 +285,13 @@ void UWeaponComponent::SetWeaponStats(const FWeaponStats& WeaponInfo)
 	// Remove all upgrades from attachments
 	ResetAttachments();
 
-	// ...Then update the final stats of the weapon
-	this->FinalStats.MagazineSize = WeaponStats.MagazineSize + AttachmentStats[0].MagazineSize + AttachmentStats[1].MagazineSize + AttachmentStats[2].MagazineSize + AttachmentStats[3].MagazineSize + AttachmentStats[4].MagazineSize;
+	// ...Then update the final magazine size of the weapon with the bonuses already reset
+	for (int i = 0; i < 4; i++)
+	{
+		this->FinalStats.MagazineSize = WeaponStats.MagazineSize + AttachmentStats[i].MagazineSize;
+	}
 	
-	// Set the number of bullets to the magazine size
+	// Set the number of bullets equal to the magazine size
 	RoundsRemainingInMagazine = FinalStats.MagazineSize;
 }
 
@@ -319,14 +322,15 @@ void UWeaponComponent::SetStockStats(const FAttachmentStats& StockInfo)
 
 void UWeaponComponent::SetFinalStats()
 {
-	// First, set the final stats with the weapons stats
+	// First, set the weapons stats
 	this->FinalStats.Accuracy = WeaponStats.Accuracy;
 	this->FinalStats.FireRate = WeaponStats.FireRate;
-	this->FinalStats.BaseDamage = WeaponStats.BaseDamage ;
+	this->FinalStats.BaseDamage = WeaponStats.BaseDamage;
 	this->FinalStats.MagazineSize = WeaponStats.MagazineSize;
 	this->FinalStats.ReloadTime = WeaponStats.ReloadTime;
 
-	// Then, modify the final stats with the attributes from all attachments together
+	// Then, modify the weapon stats with the attributes from all attachments together
+	// to detemine the final stats of the equipped weapon
 	for (int i = 0; i < 4; i++)
 	{
 		this->FinalStats.Accuracy += AttachmentStats[i].Accuracy;
@@ -361,7 +365,6 @@ void UWeaponComponent::SetFinalStats()
 		ReserveAmmoLeft = FinalStats.ReserveAmmo;
 		RoundsRemainingInMagazine = FinalStats.MagazineSize;
 	}
-	
 	UpdateAmmoUI();
 }
 

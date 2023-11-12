@@ -85,6 +85,7 @@ void UHealthComponent::OnDeath()
 	
 	if (ABaseCharacter* Character = Cast<ABaseCharacter>(GetOwner()))
 	{
+		// Retrieve the location of a character's death and call Explode function there before calling OnDeath
 		DeathLocation = Character->GetActorLocation();
 		Explode(DeathLocation);
 		Character->OnDeath();
